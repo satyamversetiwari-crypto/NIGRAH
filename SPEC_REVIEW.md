@@ -1,61 +1,54 @@
 # NIGRAH Specification Review
 
-This review records implementation blockers found when the canonical specs were combined. The supplied documents are preserved verbatim as versioned source specs. Decisions below are required before scores, data retention, or automated collection are enabled.
+## Status
 
-## Adopted document precedence
+The approved `SPEC_AMENDMENT_v1.1.md` resolves the major conflicts found across the v1.0 documents. It is authoritative for MVP implementation. The original v1.0 files remain in the repository for traceability.
 
-1. `INTELLIGENCE_SPEC.md` defines the canonical MVP catalog and feature scope.
-2. `SCORING_ENGINE_SPEC.md` is the detailed scoring authority and supersedes the earlier TI formula in the intelligence spec. That supersession is noted in `INTELLIGENCE_SPEC.md`.
-3. `DATABASE_SCHEMA.md` defines the proposed relational tables and API surface.
-4. `DATA_COLLECTION_SPEC.md` defines source classes and the collection pipeline.
-5. Where documents conflict, record an explicit versioned amendment; do not silently choose values in code.
+Resolved by v1.1:
 
-## Blocking inconsistencies and decisions
+- TSS normalization denominator is 197.
+- Single-signal patterns activate on one signal; patterns with multiple signals require two.
+- Scoring Engine TI formula supersedes the earlier TI formula.
+- Family similarity is structural overlap, with up to three ranked matches; it is not probability or confidence.
+- Confidence components are redefined to avoid reusing the old signal-coverage formulation.
+- Growth is dashboard intelligence only for MVP.
+- User text/media/URLs are deleted after analysis; only specified result metadata may be retained.
+- Family harm values are labeled expert-assigned priors with provenance metadata.
+- Regional demo values must be labeled synthetic/demo.
+- Knowledge graph is generated at runtime; no graph persistence is needed for MVP.
+- Analysis outputs record the spec/scoring versions and core result fields for reproducibility.
 
-### 1. Total signal weight
+## Remaining implementation decisions
 
-The 25 weights in `INTELLIGENCE_SPEC.md` sum to **197**, while `SCORING_ENGINE_SPEC.md` states a maximum of **194**. Since `TSSN = TSS / maximum × 100`, the denominator must be corrected to 197, or the canonical signal weights must be amended. Until fixed, normalized TSS is not trustworthy.
+These details are still needed before enabling persisted results or displaying CS/TI as a complete score. Resolve them in a versioned scoring or schema amendment rather than inventing behavior in code.
 
-### 2. Pattern activation for one-signal patterns
+### Scoring inputs and missing data
 
-The scoring spec activates a pattern only when at least two constituent signals are detected. But MP-08 and MP-10 each have one signal in the intelligence spec. Decide whether these patterns activate on one signal, whether mappings change, or whether a different rule applies. Otherwise opportunistic targeting and network expansion can never activate.
+1. **Evidence Quality (EQ):** define aggregation across multiple source records and behavior when an analysis has no public-source evidence. A user-submitted message is an analysis input, not automatically a source record.
+2. **Signal Strength (SS):** define how each detector receives an evidence-confidence value. Phrase presence alone cannot be treated as certainty that the underlying signal is true. Establish confidence values through reviewed examples.
+3. **Pattern Consistency (PC):** define its numerical formula. State what score applies when zero patterns activate.
+4. **Family Stability (FS):** the top-minus-second-family gap is clear when two families exist; define the behavior for one family or no family. Define deterministic tie-breaking for family ranks.
+5. **Family terms in TI:** TI includes FHS and FSS but up to three families are returned. Define whether the primary family supplies FHS/FSS or how the candidates are combined.
+6. **TI availability:** define required evidence/data minimums and missing-component behavior. Do not silently fill unavailable factors with zero or fabricated defaults.
+7. **PS edge cases:** the pattern activation threshold is now clear. Confirm PS is zero when no pattern activates and how multiple simultaneous patterns are averaged (the scoring spec suggests mean strength).
+8. **TSS aggregation:** define deduplication across repeated phrase matches and whether one detected TS contributes its weight once per evidence item or once per distinct source.
 
-### 3. TI versions
+### Database and privacy implementation
 
-The first intelligence spec gives `TI = .30 SPS + .25 FHS + .15 GRS + .15 RIS + .15 CS`. The later detailed scoring spec gives `TI = .30 TSSN + .20 PS + .20 FHS + .15 FSS + .15 CS`. The latter is selected as the detailed implementation authority, but it changes component weights and adds PS/FSS while removing GRS/RIS from the final weighted formula. Confirm this is an intentional replacement; GRS/RIS currently remain specified separately/demo-only.
+9. **Schema constraints:** add explicit foreign keys, unique constraints, deletion behavior, UTC/timestamptz policy, 0–100 checks, source/evidence review status, and spec/scoring version references before Alembic migrations.
+10. **Ephemeral input processing:** define temporary file/text handling, deletion timing after analysis, and ensure request logs, traces, and error reports cannot preserve submitted content. Persistent result fields must follow v1.1's allowlist.
+11. **Audit record:** preserve analysis ID, spec/scoring versions, timestamp, detected signals, activated patterns, top families, TI, and CS without copying the original user input into the record.
 
-### 4. Pattern and family classification rules
+### Data acquisition and demo labels
 
-Pattern strength is defined as the fraction of its constituent signals detected, but activation requires two detections. Family similarity is the fraction of linked patterns matched, yet no minimum evidence/activation threshold or tie handling is specified. Define how single-pattern families and multiple equal candidates are represented; report similarity as structural overlap, not probability.
+12. **Source access:** document permitted access methods, source terms, update cadence, rate limits, and review. Publicly visible does not itself define an ingestion method.
+13. **Prior metadata:** populate author, rationale, assignment date, and version for each expert-assigned family harm prior from the supplied scoring spec; state that these values are not empirical.
+14. **Regional demo values:** mark every synthetic record and visual distinctly; do not mix it into production-derived results.
 
-### 5. Confidence is not yet a reliability measure
+## Next engineering order
 
-The proposed confidence formula uses signal coverage (`detected signals / all 25`) and pattern consistency (`activated patterns / expected family patterns`). These measure catalog coverage and structural overlap; they do not by themselves establish that evidence is reliable. Evidence quality levels are source-level constants, and a weighted aggregation across multiple sources is missing. Define whether CS is analysis confidence, source reliability, or both, and avoid counting the same signals again through patterns/family similarity.
-
-### 6. Growth score behavior
-
-`GRS = min(current mentions / previous mentions × 100, 100)` gives 100 both when activity is flat and whenever activity doubles or more. It is a capped activity ratio, not a discriminating acceleration score. Define zero-baseline handling, sample minimums, time windows, and whether to retain this formula or amend the metric before interpreting it as growth.
-
-### 7. Static harm and regional values
-
-FHS family values and RIS category values are proposed static MVP values without cited derivation or review source. Store them as provisional expert-assigned priors with source/version/rationale; do not describe them as measured historical harm or regional prevalence. Clearly label any demo region data as synthetic.
-
-### 8. Evidence retention and user submissions
-
-`DATA_COLLECTION_SPEC.md` says evidence is retained indefinitely and user uploads are retained for analysis history. Earlier project copy and the live prototype say submitted text is not saved. Keep user submissions out of persistent storage until product copy, explicit user notice/consent, access/deletion controls, and an approved retention policy are designed. Public-source evidence and user submissions are separate data classes; a user report must not become source intelligence automatically.
-
-### 9. Database integrity and auditability
-
-The schema draft names relationships but omits explicit foreign keys, uniqueness, deletion behavior, timezone policy, catalog/scoring version references, and constraints for 0–100 values. Before migrations, define these constraints and include evidence provenance, collection timestamps, review status, and source-content hashes. Persisting every user analysis also needs a product decision; the current privacy statement says the prototype does not save text.
-
-### 10. Acquisition boundaries
-
-The source list includes public social channels and a 100–300-record pilot target. For each source, record access method, permitted use/terms, crawl limits, personal-data minimization, and whether the source is reviewable and stable. New families and emerging-threat candidates require human review as specified.
-
-## Safe implementation sequence
-
-1. Resolve items 1–6 and publish a scoring-spec amendment.
-2. Amend the data spec for provenance, explicit source access rules, and user-submission retention/consent.
-3. Finalize schema constraints and seed catalog versions before creating migrations.
-4. Implement ingestion and scoring against reviewed public evidence; keep demo values visibly synthetic.
-5. Only then connect production analysis results to a user-facing TI, CS, FSS, or ETI.
+1. Complete decisions 1–8 and publish a scoring-spec amendment.
+2. Finalize schema constraints and the input-deletion/result-allowlist behavior.
+3. Implement deterministic scoring and audit records against reviewed examples.
+4. Build a small, traceable public-source pilot and evaluation set.
+5. Connect Neon/API only after input deletion and persistent-result boundaries are verified.

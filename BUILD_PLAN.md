@@ -7,13 +7,14 @@ The current frontend is a mobile-first introduction to NIGRAH's intelligence mod
 ## Sequence
 
 1. **Product foundation:** initial shell, supplied logo, responsive page, and prototype analysis interface are in place. Product positioning now leads with intelligence infrastructure.
-2. **Canonical specifications:** intelligence, scoring, schema, and collection v1.0 documents are saved in the repo. `SPEC_REVIEW.md` records math, activation, confidence, growth, provenance, and retention inconsistencies to settle before implementation.
-3. **Canonical seed catalog:** align code with the 25 signals, ten pattern memberships, and 15 families; use no unapproved scoring behavior.
-4. **Evidence governance and source pilot:** define provenance, permitted public-source collection, review, deduplication, recency, and retention; then build and annotate a small source corpus.
-5. **Analysis baseline and evaluation:** preserve evidence provenance and measure against reviewed examples before calibrating TI, confidence, or ETI.
-6. **Persistence and API:** implement PostgreSQL schema/migrations and an API after data and retention fields are agreed. The collection spec proposes indefinite user-upload retention, while the prototype currently promises it is not saved; resolve this conflict before enabling persistence.
-7. **Intelligence graph and prediction:** add temporal relationships and emerging-threat candidates only after the corpus, baseline, and evaluation are credible.
-8. **Expand inputs and surfaces:** add OCR, URLs, audio/video, analyst tools, and public intelligence views in dependency order.
+2. **Canonical specifications:** v1.0 specs and approved `SPEC_AMENDMENT_v1.1.md` are saved in the repo. Amendment v1.1 supersedes their conflicting statements.
+3. **Scoring implementation details:** settle the remaining conventions in `SPEC_REVIEW.md`, especially evidence quality, pattern consistency, family tie/missing-data handling, and which family harm value feeds TI.
+4. **Canonical seed catalog:** code already follows the 25 signal IDs/weights, ten pattern memberships, and 15 families. Keep exact version references in all analyses.
+5. **Evidence governance and source pilot:** implement source provenance, review, deduplication, recency, and terms-aware public-source collection; then build and annotate a small source corpus. User-submitted media/text must be deleted after analysis; only allowed result metadata may persist.
+6. **Persistence and API:** implement PostgreSQL schema/migrations and API with ephemeral input processing, permitted result storage, audit fields, and data deletion controls.
+7. **Scoring and evaluation:** implement deterministic scoring and evaluate it against reviewed examples before describing outputs as validated.
+8. **Intelligence graph and prediction:** generate graph relationships at runtime; add ETI candidates only after there is a traceable corpus and review process.
+9. **Expand inputs and surfaces:** add OCR, URLs, audio/video, analyst tools, and public intelligence views in dependency order.
 
 ## Account setup needed
 

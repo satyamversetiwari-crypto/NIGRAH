@@ -8,10 +8,10 @@ Build an evidence-based financial threat intelligence system that collects trace
 
 - **Product framing:** landing page repositioned around intelligence infrastructure and predictive research.
 - **Canonical framework:** `INTELLIGENCE_SPEC.md` v1.0 now freezes the MVP scope at 25 signals, 10 patterns, 15 families, TI, a basic knowledge graph, basic ETI, demo-only regional intelligence, and experimental prediction.
-- **Supporting specifications:** scoring, database, and collection v1.0 documents are saved in the repo. Their cross-document conflicts are captured in `SPEC_REVIEW.md`.
+- **Approved amendment:** `SPEC_AMENDMENT_v1.1.md` supersedes conflicting v1.0 statements. It fixes TSS max at 197, defines adaptive pattern activation, adopts the detailed TI formula, makes family similarity structural overlap, revises confidence and growth definitions, prohibits permanent user-input retention, labels FHS priors and regional demo data, requires runtime graph generation, and adds score audit fields.
 - **Prototype:** browser-only phrase matching now uses the v1.0 signal, pattern, and family catalogs, but has not been evaluated against a reviewed dataset; no server persistence, official source ingestion, calibrated score, live graph, or validated prediction exists yet.
 - **Infrastructure:** private GitHub repository, Vercel frontend, and Neon project are connected. The frontend does not use Neon yet.
-- **Main next milestone:** resolve the scoring and retention conflicts in `SPEC_REVIEW.md`, then implement the canonical catalog and evidence schema before enabling real scores or persistence.
+- **Main next milestone:** settle remaining scoring conventions in `SPEC_REVIEW.md`, then implement the deterministic scoring module and persistence schema with input-deletion controls.
 
 ## Ordered work plan
 
@@ -24,34 +24,37 @@ Build an evidence-based financial threat intelligence system that collects trace
 
 **Remaining specification work:** signal/pattern definitions and scope are locked. Precise SPS, FHS, GRS, RIS, CS, confidence, and ETI transformations still need formal formulas, time windows, provenance requirements, missing-data behavior, and validation rules. No calibrated score is available until those pieces and reviewed data exist.
 
-### 1. Resolve specification conflicts — next
+### 1. Complete scoring conventions — next
 
-- [ ] Correct the TSS maximum (the listed v1.0 weights sum to 197, not 194).
-- [ ] Reconcile the two-signal activation minimum with single-signal MP-08 and MP-10.
-- [ ] Confirm the detailed scoring TI formula intentionally supersedes the earlier formula in `INTELLIGENCE_SPEC.md`.
-- [ ] Define how confidence avoids confusing catalog coverage with evidence reliability and avoids circular family inputs.
-- [ ] Define a growth metric that distinguishes flat activity from acceleration; the current cap makes flat and doubled activity both score 100.
-- [ ] Define minimum evidence/tie behavior for family similarity and document static FHS/RIS values as provisional where appropriate.
-- [ ] Resolve user-upload retention: the collection spec says indefinite storage, while current UX promises not to save submitted text.
+- [ ] Define evidence-quality aggregation (EQ) across multiple sources and how analysis with no public source record is handled.
+- [ ] Define signal-strength inputs (SS) and per-signal confidence values; do not equate phrase presence with detector certainty.
+- [ ] Define pattern-consistency (PC) numerically and behavior when no pattern activates.
+- [ ] Define family-stability (FS) for one candidate, tied candidates, and no family match.
+- [ ] Define how the primary family's FHS and FSS feed TI when up to three family matches are returned.
+- [ ] Define source and data minimums for TI; withhold TI when required evidence is missing.
+- [ ] Record these conventions as a versioned amendment before displaying CS/TI.
 
-**Exit condition:** a versioned amendment resolves the issues in `SPEC_REVIEW.md`, including user-submission consent/retention, before scoring or persistence goes live.
+**Resolved by v1.1:** TSS denominator, single-signal patterns, canonical TI formula, family-similarity meaning, upload retention, expert-assigned FHS metadata, demo regional labels, runtime graph, and analysis audit fields.
 
-### 2. Implement the canonical intelligence catalog
+**Exit condition:** inputs and missing-data behavior for EQ/SS/PC/FS and family-level TI are deterministic and versioned.
 
-- [ ] Replace preliminary text rules with all 25 canonical TS names, weights, categories, and observable examples.
-- [ ] Align all ten MP-to-TS relationships exactly to v1.0; display matched-signal coverage, not invented weighted pattern scores.
-- [ ] Add the 15 canonical SF definitions and MP links as versioned seed data.
-- [ ] Mark signals that text-only analysis cannot establish (such as deepfake detection or whether contact was unsolicited) as requiring other evidence or context.
-- [ ] Keep TI and ETI outputs withheld until their component calculations and input requirements are formally specified and validated.
+### 2. Implement deterministic scoring
 
-**Exit condition:** application catalog and canonical specs agree on every ID/name/weight/mapping; every finding has a provenance-ready explanation; no unsupported score is shown.
+- [ ] Implement TSS/TSSN with the canonical total of 197 and duplicate-signal policy.
+- [ ] Implement adaptive pattern activation and PS from v1.1.
+- [ ] Implement top-three structural FSS with deterministic ordering and tie behavior.
+- [ ] Store FHS priors with required author, rationale, version, and date metadata.
+- [ ] Implement CS and TI only after step 1 defines every component input and missing-data rule.
+- [ ] Keep ETI experimental and off the public UI until its empirical inputs and review workflow exist.
+
+**Exit condition:** an analysis can be reproduced from its spec/catalog/scoring versions, input evidence metadata, signals, patterns, top families, and recorded scores.
 
 ### 3. Evidence governance and data model
 
 - [ ] Define allowed source types and collection methods; begin with public sources and preserve source terms, attribution, and access limits.
 - [ ] Set evidence fields: source URI, publisher, publication/observation/collection timestamps, geography, language, excerpt or source artifact reference, source tier, review status, and provenance chain.
 - [ ] Define deduplication, corrections, source reliability, recency, corroboration, and analyst review rules.
-- [ ] Set data-retention rules separately for public-source records and user-submitted analysis text; default to not retaining submitted text.
+- [ ] Store public-source evidence under a documented retention policy; delete user-submitted text/media after analysis and persist only the result fields allowed by v1.1.
 - [ ] Design the PostgreSQL schema and migration approach only after the evidence fields and retention boundaries are agreed.
 
 **Exit condition:** a sample evidence record can be traced from an official/public source through normalization and human review without losing its origin or dates.

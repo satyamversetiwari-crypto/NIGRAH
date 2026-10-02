@@ -1,6 +1,6 @@
 # NIGRAH — Project Context
 
-This file is the working project brief synthesized from the supplied MVP text and source PDFs. Original materials are preserved in [`source_material/`](source_material/). **The adopted, controlling MVP definition is [`INTELLIGENCE_SPEC.md`](INTELLIGENCE_SPEC.md) v1.0.** Where older source documents or tables below conflict with that specification, v1.0 takes precedence; keep legacy material for traceability, not as active requirements.
+This file is the working project brief synthesized from supplied materials. Original materials are preserved in [`source_material/`](source_material/). **The highest-priority MVP authority is [`SPEC_AMENDMENT_v1.1.md`](SPEC_AMENDMENT_v1.1.md), which supersedes conflicting statements in all v1.0 specifications.** The individual v1.0 files remain for traceability; use the amendment and [`SPEC_REVIEW.md`](SPEC_REVIEW.md) for current decisions and remaining implementation details.
 
 ## Project in one paragraph
 
@@ -141,7 +141,7 @@ Key implementation constraints:
 - Web frontend: Next.js app in `apps/web`, deployed at [nigrah.vercel.app](https://nigrah.vercel.app). Pushes to `main` trigger Vercel deployments.
 - Database: Neon project `NIGRAH` in Singapore is linked to the Vercel project. The app has no runtime database connection or schema yet. Use a restricted application role before production data access.
 - Current frontend: platform-led landing page plus a browser-only text phrase preview. It does not ingest official sources, persist evidence, calculate a calibrated Threat Index, or make validated predictions.
-- Canonical specs: [`INTELLIGENCE_SPEC.md`](INTELLIGENCE_SPEC.md), [`SCORING_ENGINE_SPEC.md`](SCORING_ENGINE_SPEC.md), [`DATABASE_SCHEMA.md`](DATABASE_SCHEMA.md), and [`DATA_COLLECTION_SPEC.md`](DATA_COLLECTION_SPEC.md). Cross-document defects and implementation decisions are tracked in [`SPEC_REVIEW.md`](SPEC_REVIEW.md).
+- Canonical specs: [`SPEC_AMENDMENT_v1.1.md`](SPEC_AMENDMENT_v1.1.md) plus the v1.0 intelligence, scoring, schema, and collection documents. Remaining implementation details are tracked in [`SPEC_REVIEW.md`](SPEC_REVIEW.md).
 - Product and engineering priorities and exit conditions are tracked in [`ROADMAP.md`](ROADMAP.md); this file retains the fuller source synthesis and legacy notes.
 - Never commit connection strings or secrets. Keep user-submitted text ephemeral unless a separate, explicit retention policy is adopted.
 
@@ -187,5 +187,6 @@ All provided originals are copied into `source_material/`:
 - `SCORING_ENGINE_SPEC.md` — detailed scoring framework; includes unresolved formula inconsistencies listed in `SPEC_REVIEW.md`.
 - `DATABASE_SCHEMA.md` — canonical proposed database schema.
 - `DATA_COLLECTION_SPEC.md` — canonical proposed collection process and source tiers.
+- `SPEC_AMENDMENT_v1.1.md` — approved precedence, scoring, privacy, regional-data, graph, and audit amendments.
 
 The main PDF text was extracted to prepare this synthesis. Some PDFs contain malformed object references, but all pages yielded readable text; the original PDFs are retained unchanged for later inspection.
