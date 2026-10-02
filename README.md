@@ -22,9 +22,9 @@ Open http://localhost:3000.
 - `BUILD_PLAN.md` — staged implementation and service setup.
 - `source_material/` — supplied project briefs, UI/UX specification, and logo.
 
-## Planned services
+## Connected services
 
-- GitHub: private source repository (pending device sign-in and repository creation).
-- PostgreSQL: Neon (selected; connection setup pending).
-- Web hosting: Vercel (connect `apps/web`; setup pending).
-- API: FastAPI, to be deployed separately when the analysis service is implemented.
+- GitHub: [private NIGRAH repository](https://github.com/satyamversetiwari-crypto/NIGRAH), `main` branch.
+- Web hosting: [nigrah.vercel.app](https://nigrah.vercel.app), deployed from `apps/web`.
+- PostgreSQL: Neon project `NIGRAH` in Singapore, linked to this Vercel project through the Neon integration. Runtime database queries and schema are not implemented yet.
+- API: FastAPI service planned for a later step and will need a separate host.
