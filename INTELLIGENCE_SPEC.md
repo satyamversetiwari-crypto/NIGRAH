@@ -834,7 +834,7 @@ CRITICAL
 
 Formula
 
-**Version note:** The weighted formula in this original v1.0 section is superseded by the more detailed `SCORING_ENGINE_SPEC.md` v1.0. Use the scoring-engine TI formula for implementation; retain this text as the original framework history.
+**Version note:** This formula was superseded by `SCORING_ENGINE_SPEC.md` v1.0 and then finalized by `SCORING_AMENDMENT_v1.2.md`. Use v1.2 for implementation; retain this text as framework history.
 
 TI =
 0.30(SPS)

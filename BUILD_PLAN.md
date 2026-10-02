@@ -7,14 +7,12 @@ The current frontend is a mobile-first introduction to NIGRAH's intelligence mod
 ## Sequence
 
 1. **Product foundation:** initial shell, supplied logo, responsive page, and prototype analysis interface are in place. Product positioning now leads with intelligence infrastructure.
-2. **Canonical specifications:** v1.0 specs and approved `SPEC_AMENDMENT_v1.1.md` are saved in the repo. Amendment v1.1 supersedes their conflicting statements.
-3. **Scoring implementation details:** settle the remaining conventions in `SPEC_REVIEW.md`, especially evidence quality, pattern consistency, family tie/missing-data handling, and which family harm value feeds TI.
-4. **Canonical seed catalog:** code already follows the 25 signal IDs/weights, ten pattern memberships, and 15 families. Keep exact version references in all analyses.
-5. **Evidence governance and source pilot:** implement source provenance, review, deduplication, recency, and terms-aware public-source collection; then build and annotate a small source corpus. User-submitted media/text must be deleted after analysis; only allowed result metadata may persist.
-6. **Persistence and API:** implement PostgreSQL schema/migrations and API with ephemeral input processing, permitted result storage, audit fields, and data deletion controls.
-7. **Scoring and evaluation:** implement deterministic scoring and evaluate it against reviewed examples before describing outputs as validated.
-8. **Intelligence graph and prediction:** generate graph relationships at runtime; add ETI candidates only after there is a traceable corpus and review process.
-9. **Expand inputs and surfaces:** add OCR, URLs, audio/video, analyst tools, and public intelligence views in dependency order.
+2. **Canonical specifications:** v1.0 source specs are supplemented by approved `SPEC_AMENDMENT_v1.1.md` and final scoring rules in `SCORING_AMENDMENT_v1.2.md`.
+3. **Catalog and deterministic scoring:** implemented in `apps/web/lib/intelligence.ts` and `apps/web/lib/scoring.ts`; source-linked EQ/CS/TI remain unavailable in the browser-only preview.
+4. **Database foundation:** next, build Neon schema/migrations, catalog seeds, and audit fields without storing user inputs.
+5. **Public intelligence pilot:** manually collect a small traceable dataset from approved public sources and review each mapping.
+6. **API and app integration:** process user input ephemerally, link relevant public evidence, calculate EQ/CS/TI, and persist only permitted result metadata.
+7. **Graph and expansion:** generate graph relationships at runtime; add OCR, URLs, audio/video, and ETI in dependency order.
 
 ## Account setup needed
 

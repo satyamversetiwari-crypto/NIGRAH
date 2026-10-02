@@ -24,7 +24,8 @@ Open http://localhost:3000.
 - `DATABASE_SCHEMA.md` — proposed PostgreSQL entities and API surface.
 - `DATA_COLLECTION_SPEC.md` — proposed public-source collection pipeline and dataset targets.
 - `SPEC_AMENDMENT_v1.1.md` — approved amendment; highest-priority implementation authority for MVP.
-- `SPEC_REVIEW.md` — remaining implementation details not specified by amendment v1.1.
+- `SCORING_AMENDMENT_v1.2.md` — final deterministic scoring rules; supersedes prior scoring details.
+- `SPEC_REVIEW.md` — implementation status and the next practical steps.
 - `BUILD_PLAN.md` — staged implementation and service setup.
 - `ROADMAP.md` — prioritized product, data, and engineering milestones with exit conditions.
 - `source_material/` — supplied project briefs, UI/UX specification, and logo.

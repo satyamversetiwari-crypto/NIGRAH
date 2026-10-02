@@ -11,19 +11,15 @@ export type SignalDefinition = {
   weight: number;
   examples: string[];
   textRules: RegExp[];
+  contextualRules?: RegExp[];
   limitation?: string;
 };
 
-export type SignalEvidence = { id: string; label: string; matches: string[] };
-export type PatternMatch = {
-  id: string;
-  label: string;
-  matchedSignals: string[];
-  totalSignals: number;
-};
+export type SignalEvidence = { id: string; label: string; weight: number; confidence: number; matches: string[]; limitation?: string };
+export type PatternMatch = { id: string; label: string; matchedSignals: string[]; totalSignals: number; strength: number };
 
 export const signals: SignalDefinition[] = [
-  { id: "TS-01", name: "Guaranteed Return", category: "Authority", weight: 10, examples: ["Guaranteed 20% returns", "Fixed monthly income", "Risk-free profits"], textRules: [/\bguaranteed?\s+(?:\d+%\s+)?returns?\b/ig, /\bfixed\s+(?:daily|weekly|monthly)\s+(?:income|returns?)\b/ig, /\brisk[- ]free\s+(?:profits?|returns?)\b/ig] },
+  { id: "TS-01", name: "Guaranteed Return", category: "Authority", weight: 10, examples: ["Guaranteed 20% returns", "Fixed monthly income", "Risk-free profits"], textRules: [/\bguaranteed?\s+(?:\d+%\s+)?returns?\b/ig, /\bfixed\s+(?:daily|weekly|monthly)\s+(?:income|returns?)\b/ig, /\brisk[- ]free\s+(?:profits?|returns?)\b/ig], contextualRules: [/\bhistorically\s+(?:our\s+)?investments?\s+returned\s+(?:around\s+)?\d+%\b/ig] },
   { id: "TS-02", name: "Unrealistic Return", category: "Authority", weight: 9, examples: ["Double money in 30 days", "5x profit guaranteed"], textRules: [/\bdouble\s+(?:your\s+)?money\s+in\s+\d+\s+days?\b/ig, /\b\d+\s*x\s+(?:profit|returns?)\b/ig, /\b\d+\s*%\s*(?:daily|weekly|monthly)\s+returns?\b/ig] },
   { id: "TS-03", name: "Fake Authority", category: "Authority", weight: 9, examples: ["Fake SEBI analyst", "Fake investment advisor"], textRules: [/\b(?:fake|unofficial)\s+(?:SEBI\s+)?(?:analyst|investment advisor)\b/ig, /\bSEBI[- ](?:certified|approved)\s+analyst\b/ig] },
   { id: "TS-04", name: "Impersonation", category: "Authority", weight: 10, examples: ["Fake broker", "Fake regulator"], textRules: [/\b(?:fake|clone)\s+(?:broker|regulator|bank|SEBI)\b/ig, /\bpretend(?:ing)?\s+to\s+be\s+(?:a\s+)?(?:broker|regulator|bank|SEBI)\b/ig] },
@@ -64,36 +60,50 @@ export const patterns = [
 ] as const;
 
 export const scamFamilies = [
-  { id: "SF-01", name: "Fake Advisor Fraud", patterns: ["MP-01", "MP-05"] },
-  { id: "SF-02", name: "Fake Research Analyst Fraud", patterns: ["MP-01", "MP-06"] },
-  { id: "SF-03", name: "Telegram Signal Fraud", patterns: ["MP-02", "MP-03", "MP-04"] },
-  { id: "SF-04", name: "WhatsApp Tip Scam", patterns: ["MP-02", "MP-03", "MP-08"] },
-  { id: "SF-05", name: "Guaranteed Return Scheme", patterns: ["MP-02", "MP-05"] },
-  { id: "SF-06", name: "Ponzi Scheme", patterns: ["MP-02", "MP-05", "MP-10"] },
-  { id: "SF-07", name: "Pyramid Scheme", patterns: ["MP-10", "MP-05"] },
-  { id: "SF-08", name: "Pump And Dump", patterns: ["MP-02", "MP-04", "MP-06"] },
-  { id: "SF-09", name: "Fake Trading Application", patterns: ["MP-09", "MP-07"] },
-  { id: "SF-10", name: "Clone Broker Platform", patterns: ["MP-09", "MP-01"] },
-  { id: "SF-11", name: "Fake IPO Scam", patterns: ["MP-01", "MP-02"] },
-  { id: "SF-12", name: "Recovery Scam", patterns: ["MP-05", "MP-07"] },
-  { id: "SF-13", name: "Investment Coaching Scam", patterns: ["MP-05", "MP-02"] },
-  { id: "SF-14", name: "Premium Membership Scam", patterns: ["MP-05", "MP-03"] },
-  { id: "SF-15", name: "Referral Fraud", patterns: ["MP-10", "MP-02"] },
+  { id: "SF-01", name: "Fake Advisor Fraud", patterns: ["MP-01", "MP-05"], harmScore: 75 },
+  { id: "SF-02", name: "Fake Research Analyst Fraud", patterns: ["MP-01", "MP-06"], harmScore: 80 },
+  { id: "SF-03", name: "Telegram Signal Fraud", patterns: ["MP-02", "MP-03", "MP-04"], harmScore: 70 },
+  { id: "SF-04", name: "WhatsApp Tip Scam", patterns: ["MP-02", "MP-03", "MP-08"], harmScore: 70 },
+  { id: "SF-05", name: "Guaranteed Return Scheme", patterns: ["MP-02", "MP-05"], harmScore: 75 },
+  { id: "SF-06", name: "Ponzi Scheme", patterns: ["MP-02", "MP-05", "MP-10"], harmScore: 95 },
+  { id: "SF-07", name: "Pyramid Scheme", patterns: ["MP-10", "MP-05"], harmScore: 90 },
+  { id: "SF-08", name: "Pump And Dump", patterns: ["MP-02", "MP-04", "MP-06"], harmScore: 85 },
+  { id: "SF-09", name: "Fake Trading Application", patterns: ["MP-09", "MP-07"], harmScore: 95 },
+  { id: "SF-10", name: "Clone Broker Platform", patterns: ["MP-09", "MP-01"], harmScore: 90 },
+  { id: "SF-11", name: "Fake IPO Scam", patterns: ["MP-01", "MP-02"], harmScore: 85 },
+  { id: "SF-12", name: "Recovery Scam", patterns: ["MP-05", "MP-07"], harmScore: 80 },
+  { id: "SF-13", name: "Investment Coaching Scam", patterns: ["MP-05", "MP-02"], harmScore: 60 },
+  { id: "SF-14", name: "Premium Membership Scam", patterns: ["MP-05", "MP-03"], harmScore: 55 },
+  { id: "SF-15", name: "Referral Fraud", patterns: ["MP-10", "MP-02"], harmScore: 70 },
 ] as const;
+
+export const familyHarmPriorMetadata = {
+  version: "scoring-engine-spec-v1.0",
+  author: "Supplied NIGRAH Scoring Engine Specification v1.0",
+  rationale: "Imported expert-assigned MVP prior; not empirically derived or validated.",
+  dateAssigned: "2026-10-02",
+} as const;
 
 export function analyzeText(input: string): { evidence: SignalEvidence[]; patterns: PatternMatch[] } {
   const evidence = signals.flatMap((signal) => {
-    const matches = new Set<string>();
+    const matches = new Map<string, number>();
     for (const regex of signal.textRules) {
       regex.lastIndex = 0;
-      for (const match of input.matchAll(regex)) matches.add(match[0]);
+      for (const match of input.matchAll(regex)) matches.set(match[0], 95);
     }
-    return matches.size ? [{ id: signal.id, label: signal.name, matches: [...matches] }] : [];
+    for (const regex of signal.contextualRules ?? []) {
+      regex.lastIndex = 0;
+      for (const match of input.matchAll(regex)) matches.set(match[0], Math.max(matches.get(match[0]) ?? 0, 60));
+    }
+    return matches.size ? [{ id: signal.id, label: signal.name, weight: signal.weight, confidence: Math.max(...matches.values()), matches: [...matches.keys()], limitation: signal.limitation }] : [];
   });
   const found = new Set(evidence.map((item) => item.id));
   const matchedPatterns = patterns.flatMap((pattern) => {
     const matchedSignals = pattern.signals.filter((id) => found.has(id));
-    return matchedSignals.length ? [{ id: pattern.id, label: pattern.name, matchedSignals, totalSignals: pattern.signals.length }] : [];
+    const activationMinimum = pattern.signals.length === 1 ? 1 : 2;
+    return matchedSignals.length >= activationMinimum
+      ? [{ id: pattern.id, label: pattern.name, matchedSignals, totalSignals: pattern.signals.length, strength: matchedSignals.length / pattern.signals.length }]
+      : [];
   });
   return { evidence, patterns: matchedPatterns };
 }

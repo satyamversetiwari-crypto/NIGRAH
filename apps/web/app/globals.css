@@ -72,3 +72,14 @@
 .footer-brand img{width:105px}
 @media(max-width:900px){.hero{grid-template-columns:1fr;gap:46px;padding-top:75px;padding-bottom:80px;max-width:760px}.intelligence-visual{max-width:650px;width:100%;margin:auto}.method-section{grid-template-columns:1fr;gap:34px;padding-top:78px;padding-bottom:78px}.analysis-section{gap:30px}}
 @media(max-width:650px){.brand img{width:120px}.topbar{padding:0 18px}.topbar nav{display:none}.nav-cta{font-size:11px}.hero{padding:64px 20px 70px;gap:35px}.hero h1{font-size:42px}.hero-actions{align-items:flex-start;flex-direction:column;gap:16px}.intelligence-visual{padding:15px}.model-flow{grid-template-columns:1fr;gap:8px;padding:20px 0 16px}.model-node{min-height:94px;padding:13px}.flow-line{height:14px;width:1px;margin:auto}.flow-line i{top:auto;bottom:0;right:-3px;transform:rotate(135deg)}.visual-foot{flex-wrap:wrap;justify-content:flex-start}.platform-section{padding:70px 21px 54px}.capability-grid{grid-template-columns:1fr;margin-top:35px}.capability-grid article{min-height:0}.capability-grid h3{margin-top:18px}.catalog-strip{align-items:flex-start;flex-direction:column;gap:10px}.catalog-strip p{font-size:11px}.catalog-strip p b{font-size:17px}.catalog-strip p i{margin-left:7px;margin-right:7px}.catalog-note{max-width:none}.method-section{padding:70px 22px}.analysis-section{grid-template-columns:1fr;gap:22px;padding:68px 18px 80px}.scan-panel{padding:15px}.footer-brand{align-items:flex-start;flex-direction:column;gap:9px}footer{padding:22px;flex-direction:column}footer p{text-align:left}}
+
+.score-output{max-width:1120px;width:calc(100% - 64px);margin:-60px auto 90px;padding:22px;background:var(--surface);border:1px solid var(--border);border-radius:14px}
+.score-output>.eyebrow{margin:0 0 7px;font-size:9px}
+.score-output h3{font-size:19px;margin:0 0 8px}
+.score-output>.result-disclaimer{margin:0 0 18px}
+.score-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.score-metrics>div{padding:12px;background:var(--surface2);border-radius:8px}
+.score-metrics small,.score-metrics b{display:block}
+.score-metrics small{font-size:10px;color:#93a3b8;margin-bottom:4px}
+.score-metrics b{font-size:16px}
+@media(max-width:650px){.score-output{width:calc(100% - 36px);margin:-45px auto 70px;padding:15px}.score-metrics{grid-template-columns:repeat(2,1fr)}}
