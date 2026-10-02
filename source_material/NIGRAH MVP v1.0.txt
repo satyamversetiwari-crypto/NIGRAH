@@ -1,0 +1,854 @@
+# NIGRAH MVP v1.0
+## Financial Threat Intelligence System for Investor Resilience
+
+> "Every financial scam leaves signals before it creates victims."
+>
+> NIGRAH transforms fragmented public information into structured financial threat intelligence, reducing the information delay between scam emergence and investor awareness. :contentReference[oaicite:0]{index=0}
+
+---
+
+# Project Overview
+
+NIGRAH is an AI-powered Financial Threat Intelligence System designed to identify, classify, score, and explain financial scams before investors become victims.
+
+Unlike traditional scam detection systems that answer:
+
+> Is this a scam?
+
+NIGRAH answers:
+
+- What manipulation signals exist?
+- What behavioral pattern is being used?
+- Which scam family does this resemble?
+- How dangerous is it?
+- Is this an emerging threat?
+
+The objective is not surveillance.
+
+The objective is pattern extraction and intelligence generation from public information. :contentReference[oaicite:1]{index=1}
+
+---
+
+# Core Hypothesis
+
+## Information Delay Hypothesis
+
+Every scam follows a similar lifecycle:
+
+Scam Appears
+↓
+Victims Lose Money
+↓
+Complaints Filed
+↓
+Investigation
+↓
+Warning Issued
+↓
+Public Awareness
+
+The problem is not lack of warnings.
+
+The problem is information delay. :contentReference[oaicite:2]{index=2}
+
+NIGRAH is designed to shorten this delay by detecting recurring manipulation patterns before widespread damage occurs.
+
+---
+
+# Vision
+
+NIGRAH is not:
+
+- A trading platform
+- An investment advisory service
+- A scam-reporting portal
+
+NIGRAH is:
+
+## A Financial Threat Intelligence Layer
+
+that continuously analyzes public intelligence and converts it into actionable investor protection insights. :contentReference[oaicite:3]{index=3}
+
+---
+
+# MVP Objective
+
+Build a working system capable of:
+
+1. Accepting suspicious content
+2. Extracting threat signals
+3. Detecting manipulation patterns
+4. Classifying scam families
+5. Generating a Threat Index
+6. Producing explainable risk reports
+7. Visualizing scam intelligence
+
+---
+
+# Primary Feature
+
+# Analyze Scam Risk
+
+This is the hero feature.
+
+A user can upload suspicious content and receive an intelligence-driven risk assessment.
+
+---
+
+## Supported Inputs
+
+### Text
+
+Examples:
+
+- WhatsApp messages
+- Telegram messages
+- Emails
+- Investment offers
+
+---
+
+### Screenshot
+
+Examples:
+
+- Telegram screenshot
+- WhatsApp screenshot
+- Trading screenshot
+- Promotional image
+
+---
+
+### Audio
+
+Examples:
+
+- Investment call recordings
+- Voice notes
+
+---
+
+### Video
+
+Examples:
+
+- YouTube investment videos
+- Instagram reels
+- Promotional content
+
+---
+
+### Website URL
+
+Examples:
+
+- Advisory websites
+- Investment websites
+- Trading platforms
+
+---
+
+# User Flow
+
+Upload Content
+↓
+Content Extraction
+↓
+Threat Signal Detection
+↓
+Pattern Mapping
+↓
+Scam Family Classification
+↓
+Threat Index Calculation
+↓
+Intelligence Report
+
+---
+
+# NIGRAH Intelligence Architecture
+
+## Layer 1
+
+### Threat Signals
+
+Every scam can be decomposed into measurable threat signals. :contentReference[oaicite:4]{index=4}
+
+---
+
+### MVP Threat Signals (25)
+
+#### Authority Signals
+
+TS-01 Guaranteed Return
+
+TS-02 Unrealistic Return
+
+TS-03 Fake Authority
+
+TS-04 Impersonation
+
+TS-05 Unregistered Entity
+
+#### Manipulation Signals
+
+TS-06 Urgency
+
+TS-07 Scarcity
+
+TS-08 FOMO
+
+TS-09 Social Proof
+
+TS-10 Community Pressure
+
+#### Trust Signals
+
+TS-11 Trust Building
+
+TS-12 Exclusivity
+
+TS-13 Reciprocity
+
+TS-14 Lifestyle Projection
+
+#### Execution Signals
+
+TS-15 Payment Diversion
+
+TS-16 Withdrawal Restriction
+
+TS-17 Escalating Investment
+
+TS-18 Borrow-To-Invest
+
+#### Information Quality Signals
+
+TS-19 Non-Transparent Claims
+
+TS-20 Complexity Shield
+
+TS-21 Rumor-Based Claims
+
+TS-22 Unsolicited Contact
+
+#### Emerging Signals
+
+TS-23 Deepfake Authority
+
+TS-24 Fake Trading App
+
+TS-25 Referral Pyramid
+
+Source Framework: :contentReference[oaicite:5]{index=5}
+
+---
+
+## Layer 2
+
+### Manipulation Patterns
+
+Threat signals are grouped into psychological attack patterns.
+
+### MP-01 Authority Exploitation
+
+Uses:
+
+- Fake Authority
+- Impersonation
+- Fake Registration
+
+---
+
+### MP-02 Greed Engineering
+
+Uses:
+
+- Guaranteed Returns
+- Unrealistic Returns
+
+---
+
+### MP-03 Pressure Engineering
+
+Uses:
+
+- Urgency
+- Scarcity
+
+---
+
+### MP-04 Social Validation
+
+Uses:
+
+- Testimonials
+- Social Proof
+
+---
+
+### MP-05 Trust Harvesting
+
+Uses:
+
+- Mentorship
+- Personal Guidance
+
+---
+
+### MP-06 Information Asymmetry
+
+Uses:
+
+- Secret Strategies
+- Insider Information
+
+---
+
+### MP-07 Financial Entrapment
+
+Uses:
+
+- Withdrawal Restrictions
+- Additional Fees
+
+---
+
+### MP-08 Opportunistic Targeting
+
+Uses:
+
+- Cold Outreach
+- Random Messages
+
+---
+
+### MP-09 Identity Manipulation
+
+Uses:
+
+- Fake Apps
+- Deepfakes
+- Clone Websites
+
+---
+
+### MP-10 Network Expansion
+
+Uses:
+
+- Referrals
+- Recruitment
+
+---
+
+## Layer 3
+
+### Scam Family Engine
+
+The system maps detected patterns to known fraud ecosystems.
+
+---
+
+### MVP Scam Families
+
+SF-01 Fake Advisor Fraud
+
+SF-02 Fake Research Analyst Fraud
+
+SF-03 Telegram Signal Fraud
+
+SF-04 WhatsApp Tip Scam
+
+SF-05 Guaranteed Return Scam
+
+SF-06 Ponzi Scheme
+
+SF-07 Pyramid Scheme
+
+SF-08 Pump and Dump
+
+SF-09 Fake Trading App
+
+SF-10 Clone Broker Platform
+
+SF-11 Fake IPO Scam
+
+SF-12 Recovery Scam
+
+SF-13 Investment Coaching Scam
+
+SF-14 Premium Membership Scam
+
+SF-15 Referral Fraud
+
+---
+
+## Layer 4
+
+### Threat Index Engine
+
+The core scoring mechanism.
+
+---
+
+### Formula
+
+Threat Index (TI)
+
+TI =
+0.30(SPS)
++
+0.25(FHS)
++
+0.15(GRS)
++
+0.15(RIS)
++
+0.15(CS)
+
+---
+
+### Components
+
+#### SPS
+
+Signal Pattern Score
+
+Measures manipulation intensity.
+
+---
+
+#### FHS
+
+Family Harm Score
+
+Measures historical damage potential.
+
+---
+
+#### GRS
+
+Growth Rate Score
+
+Measures threat acceleration.
+
+---
+
+#### RIS
+
+Regional Impact Score
+
+Measures local prevalence.
+
+---
+
+#### CS
+
+Confidence Score
+
+Measures evidence reliability.
+
+---
+
+### Output Scale
+
+0–20 Low Risk
+
+21–40 Moderate Risk
+
+41–60 Elevated Risk
+
+61–80 High Risk
+
+81–100 Critical Risk
+
+---
+
+## Layer 5
+
+### Knowledge Graph
+
+The intelligence layer.
+
+Nodes:
+
+- Threat Signals
+- Manipulation Patterns
+- Scam Families
+- Regions
+- Sources
+- Platforms
+
+Example:
+
+Guaranteed Return
+↓
+Greed Engineering
+↓
+Telegram Signal Fraud
+↓
+Uttar Pradesh
+↓
+Telegram
+
+This allows relationship-based intelligence instead of simple keyword matching.
+
+---
+
+## Layer 6
+
+### Emerging Threat Engine
+
+This is the patent-oriented innovation.
+
+Instead of identifying known scams, NIGRAH attempts to identify emerging scam ecosystems.
+
+---
+
+### Emerging Threat Index (ETI)
+
+ETI =
+Signal Novelty
+×
+Growth Velocity
+×
+Family Similarity
+×
+Geographic Spread
+
+Output:
+
+0–100
+
+High ETI indicates a potentially emerging scam family.
+
+---
+
+# Intelligence Sources
+
+NIGRAH operates entirely on public intelligence.
+
+Sources include:
+
+### Regulatory
+
+- SEBI Alerts
+- SEBI Orders
+- Registered Intermediary Database
+
+### Government
+
+- RBI Advisories
+- CERT-In Alerts
+- National Cybercrime Portal
+
+### Media
+
+- Economic Times
+- Moneycontrol
+- Mint
+- Business Standard
+
+### Public Sources
+
+- Public websites
+- Public Telegram communities
+- Public YouTube videos
+- Public social media posts
+
+NIGRAH collects scam behavior, not personal investor data. :contentReference[oaicite:6]{index=6}
+
+---
+
+# Analyze Scam Risk Pipeline
+
+## Text
+
+Text
+↓
+Threat Signal Extraction
+↓
+Pattern Detection
+↓
+Scam Family Classification
+↓
+Threat Index
+
+---
+
+## Screenshot
+
+Image
+↓
+OCR
+↓
+Text
+↓
+Threat Analysis
+
+---
+
+## Audio
+
+Audio
+↓
+Speech-To-Text
+↓
+Threat Analysis
+
+---
+
+## Video
+
+Video
+↓
+Audio Extraction
+↓
+Speech-To-Text
+↓
+Threat Analysis
+
+---
+
+## Website
+
+URL
+↓
+Content Extraction
+↓
+Threat Analysis
+
+---
+
+# Risk Report Output
+
+Example:
+
+Threat Index: 91
+
+Risk Level: Critical
+
+Predicted Scam Family:
+Telegram Signal Fraud
+
+Similarity Score:
+91%
+
+Detected Signals:
+
+- Guaranteed Return
+- Fake Authority
+- Urgency
+- Scarcity
+
+Manipulation Patterns:
+
+- Greed Engineering
+- Authority Exploitation
+- Pressure Engineering
+
+Confidence:
+89%
+
+Explanation:
+
+This content contains high-confidence manipulation signals commonly associated with Telegram Signal Fraud and Guaranteed Return schemes.
+
+Recommended Action:
+
+- Verify registration status
+- Avoid transferring funds
+- Cross-check advisor credentials
+
+---
+
+# MVP Dashboard
+
+## Module 1
+
+Analyze Scam Risk
+
+---
+
+## Module 2
+
+Threat Intelligence Dashboard
+
+Displays:
+
+- Top Scam Families
+- Active Threat Categories
+- Threat Rankings
+
+---
+
+## Module 3
+
+Regional Threat Map
+
+Displays:
+
+- State-wise Risk
+- Scam Concentration
+
+---
+
+## Module 4
+
+Knowledge Graph Explorer
+
+Visual relationships between:
+
+- Signals
+- Patterns
+- Families
+- Regions
+
+---
+
+## Module 5
+
+Emerging Threat Monitor
+
+Displays:
+
+- New Patterns
+- Growing Families
+- High ETI Alerts
+
+---
+
+# Tech Stack
+
+## Frontend
+
+Next.js 15
+
+Tailwind CSS
+
+shadcn/ui
+
+Recharts
+
+---
+
+## Backend
+
+FastAPI
+
+Python
+
+Pydantic
+
+---
+
+## Database
+
+PostgreSQL
+
+(Neon PostgreSQL for serverless deployment)
+
+---
+
+## ORM
+
+SQLAlchemy
+
+---
+
+## AI Layer
+
+OpenAI API
+
+Primary Tasks:
+
+- Signal Extraction
+- Pattern Mapping
+- Scam Family Classification
+- Risk Explanation
+
+---
+
+## OCR
+
+Tesseract OCR
+
+or
+
+Google Vision API (optional)
+
+---
+
+## Speech To Text
+
+OpenAI Whisper
+
+---
+
+## Graph Engine
+
+NetworkX
+
+---
+
+## Deployment
+
+Frontend:
+Vercel
+
+Backend:
+Railway or Render
+
+Database:
+Neon PostgreSQL
+
+---
+
+# Development Priority
+
+## Phase 1
+
+Core Intelligence Engine
+
+- Threat Signals
+- Patterns
+- Families
+- Threat Index
+
+---
+
+## Phase 2
+
+Analyze Scam Risk
+
+- Text
+- Screenshot
+
+---
+
+## Phase 3
+
+Audio + Video Analysis
+
+---
+
+## Phase 4
+
+Knowledge Graph Dashboard
+
+---
+
+## Phase 5
+
+Emerging Threat Engine
+
+---
+
+# Final Positioning
+
+NIGRAH is not a scam detector.
+
+NIGRAH is a Financial Threat Intelligence System that transforms public intelligence into explainable risk assessments by mapping threat signals, manipulation patterns, scam families, and emerging fraud ecosystems.
+
+Its purpose is to reduce information delay between the emergence of financial threats and investor awareness, improving resilience across India's growing investor population. :contentReference[oaicite:7]{index=7}
