@@ -1,33 +1,18 @@
 "use client";
 
 import { useState } from "react";
-
-type Finding = { id: string; label: string; phrase: string; weight: number };
-const rules: Array<{ id: string; label: string; re: RegExp; weight: number }> = [
-  { id: "TS-01", label: "Guaranteed returns", re: /guaranteed|assured|risk[- ]free|fixed (weekly|monthly|daily) return/i, weight: 10 },
-  { id: "TS-02", label: "Unusually high returns", re: /\d+\s*%\s*(weekly|daily|monthly)|double your money|\d+x return/i, weight: 10 },
-  { id: "TS-03", label: "Authority claim", re: /SEBI[- ]certified|SEBI approved|certified analyst|insider expert/i, weight: 9 },
-  { id: "TS-06", label: "Urgency", re: /join today|last chance|only today|act now|closing soon/i, weight: 8 },
-  { id: "TS-07", label: "Scarcity or exclusivity", re: /only \d+ seats|limited seats|VIP slots|invite only/i, weight: 7 },
-  { id: "TS-09", label: "Social proof", re: /profit screenshots|testimonials|everyone is earning|success stories/i, weight: 8 },
-  { id: "TS-15", label: "Payment diversion", re: /pay (to|into)|personal account|UPI ID|transfer now/i, weight: 10 },
-  { id: "TS-16", label: "Withdrawal restriction", re: /fee before withdrawal|tax before withdrawal|withdrawal.*(fee|blocked)/i, weight: 10 },
-];
+import { analyzeText, catalogVersion } from "../lib/intelligence";
 
 export default function Home() {
   const [text, setText] = useState("");
-  const [findings, setFindings] = useState<Finding[] | null>(null);
+  const [analysis, setAnalysis] = useState<ReturnType<typeof analyzeText> | null>(null);
   function analyze() {
-    const found = rules.flatMap((rule) => {
-      const match = text.match(rule.re);
-      return match ? [{ id: rule.id, label: rule.label, phrase: match[0], weight: rule.weight }] : [];
-    });
-    setFindings(found);
+    setAnalysis(analyzeText(text));
   }
 
   return <main>
     <header className="topbar">
-      <a className="brand" href="#top" aria-label="NIGRAH home"><span className="logo-wrap"><img src="/brand/nigrah-logo.png" alt="NIGRAH" /></span></a>
+      <a className="brand" href="#top" aria-label="NIGRAH home"><span className="wordmark">NIGR<span>A<span className="wordmark-cut" /></span>H</span></a>
       <nav aria-label="Main navigation"><a href="#how">How it works</a><a href="#privacy">Privacy</a></nav>
       <a className="nav-cta" href="#scan">Check something <span aria-hidden="true">↗</span></a>
     </header>
@@ -55,8 +40,8 @@ export default function Home() {
 
     <section className="scan-section" id="scan">
       <div className="scan-intro"><p className="eyebrow">START WITH A MESSAGE</p><h2>What do you want to check?</h2><p>Paste a suspicious message or investment offer. This first preview checks a small set of known wording patterns.</p></div>
-      <div className="scan-panel"><label htmlFor="message">Message or offer</label><textarea id="message" value={text} onChange={(e) => { setText(e.target.value); setFindings(null); }} placeholder="Paste a message, offer, or link here…" maxLength={10000} /><div className="scan-controls"><span>{text.length.toLocaleString()} / 10,000</span><button className="primary-btn" onClick={analyze} disabled={!text.trim()}>Check message <span aria-hidden="true">→</span></button></div>
-      {findings && <div className="result" aria-live="polite"><div className="result-title"><div><p className="eyebrow">PREVIEW ANALYSIS</p><h3>{findings.length ? `${findings.length} signal${findings.length === 1 ? "" : "s"} to review` : "No listed signals found"}</h3></div><span className={findings.length > 1 ? "risk-pill caution" : "risk-pill"}>{findings.length > 1 ? "Review carefully" : "Limited evidence"}</span></div><p className="result-disclaimer">This preview uses simple phrase matching. It is not a validated Threat Index, does not confirm fraud, and may miss signals.</p>{findings.length > 0 && <ul className="finding-list">{findings.map((f) => <li key={f.id}><span className="finding-icon">!</span><span><b>{f.label}</b><small>{f.id} · Matched “{f.phrase}”</small></span></li>)}</ul>}<p className="next-action"><b>Before you act</b><br />Verify the person or company through an official source. Don’t transfer money based on a message alone.</p></div>}
+      <div className="scan-panel"><label htmlFor="message">Message or offer</label><textarea id="message" value={text} onChange={(e) => { setText(e.target.value); setAnalysis(null); }} placeholder="Paste a message, offer, or link here…" maxLength={10000} /><div className="scan-controls"><span>{text.length.toLocaleString()} / 10,000</span><button className="primary-btn" onClick={analyze} disabled={!text.trim()}>Check message <span aria-hidden="true">→</span></button></div>
+      {analysis && <div className="result" aria-live="polite"><div className="result-title"><div><p className="eyebrow">PREVIEW ANALYSIS</p><h3>{analysis.evidence.length ? `${analysis.evidence.length} signal${analysis.evidence.length === 1 ? "" : "s"} to review` : "No listed signals found"}</h3></div><span className="risk-pill">Evidence preview</span></div><p className="result-disclaimer">Phrase rules found these text matches. Pattern values show weighted rule coverage, not probability or fraud risk. No calibrated Threat Index is available in this preview. Catalog {catalogVersion}.</p>{analysis.evidence.length > 0 && <ul className="finding-list">{analysis.evidence.map((f) => <li key={f.id}><span className="finding-icon">!</span><span><b>{f.label}</b><small>{f.id} · Matched {f.matches.map((match) => `“${match}”`).join(", ")}</small></span></li>)}</ul>}{analysis.patterns.length > 0 && <div className="pattern-list"><h4>Related manipulation patterns</h4>{analysis.patterns.map((pattern) => <div className="pattern-row" key={pattern.id}><span><b>{pattern.label}</b><small>{pattern.id} · {pattern.signals.join(", ")}</small></span><span>{pattern.score}%</span></div>)}</div>}<p className="next-action"><b>Before you act</b><br />Verify the person or company through an official source. Don’t transfer money based on a message alone.</p></div>}
       </div>
     </section>
 
