@@ -12,7 +12,7 @@ The project frames the core problem as **information delay**: scam appears → v
 
 ## Product goals and user journey
 
-The MVP hero feature is **Analyze Scam Risk**. A person submits suspicious content; NIGRAH extracts content, identifies signals, maps patterns, compares scam families, scores risk, and presents an explainable report with practical protective actions.
+The wider product is **financial threat intelligence and predictive technology**. NIGRAH aims to collect traceable public evidence, structure recurring behavior, connect entities and events, and evaluate emerging-threat hypotheses. Message analysis is one possible interface into that intelligence—not the product's central identity. The design draft's scan flow remains useful for that feature, but public positioning should describe the platform and its evidence pipeline, not present NIGRAH as a consumer scam-checking service.
 
 Planned input types: text, screenshots/images, audio, video, and website URLs. Proposed processing: direct text extraction; OCR for images; speech-to-text for audio; audio extraction plus speech-to-text for video; page text extraction for URLs. This is the larger product vision; the stated development sequence starts with the core intelligence engine, then text and screenshot analysis, then audio/video, graph dashboard, and emerging-threat monitoring.
 
@@ -133,11 +133,12 @@ Key implementation constraints:
 
 ### Workspace and service setup status (2026-10-02)
 
-- Current open workspace: `/Users/satyamtiwari/Documents/ChatGPT/NIGRAH`; it contains the project context and source materials, with an empty Git repository on `main` (no commits and no remote).
-- User-identified Desktop folder `/Users/satyamtiwari/Desktop/NIGRAH` exists but is empty. Confirm/use this as the code location before building there; the current workspace and Desktop folder are different directories.
-- GitHub CLI is present, but the configured GitHub account token is invalid and requires interactive re-authentication. Do not put credentials in project files or chat.
-- Vercel CLI is not currently installed. No GitHub/Vercel/database connector is available in the current tool set.
-- Suggested path once account access is ready: local web app and deterministic analysis API first; GitHub private repo and `main` deployment; PostgreSQL via Neon; Vercel for the Next.js frontend; server-side API deployment separately if FastAPI remains the chosen backend. The design/stack brief is not yet an implemented app.
+- Code repository: `/Users/satyamtiwari/Desktop/NIGRAH`, private GitHub repository [`satyamversetiwari-crypto/NIGRAH`](https://github.com/satyamversetiwari-crypto/NIGRAH), `main` branch.
+- Web frontend: Next.js app in `apps/web`, deployed at [nigrah.vercel.app](https://nigrah.vercel.app). Pushes to `main` trigger Vercel deployments.
+- Database: Neon project `NIGRAH` in Singapore is linked to the Vercel project. The app has no runtime database connection or schema yet. Use a restricted application role before production data access.
+- Current frontend: platform-led landing page plus a browser-only text phrase preview. It does not ingest official sources, persist evidence, calculate a calibrated Threat Index, or make validated predictions.
+- Product and engineering priorities and exit conditions are tracked in [`ROADMAP.md`](ROADMAP.md); this file retains the fuller source synthesis and unresolved model decisions.
+- Never commit connection strings or secrets. Keep user-submitted text ephemeral unless a separate, explicit retention policy is adopted.
 
 ## Development sequence in the brief
 
@@ -166,7 +167,7 @@ All provided originals are copied into `source_material/`:
 
 - `NIGRAH MVP v1.0.txt` — pasted product/MVP brief.
 - `Design Draft.pdf` — UI/UX product specification.
-- `ChatGPT Image Oct 2, 2026, 09_07_33 AM.png` — supplied logo image.
+- `ChatGPT Image Oct 2, 2026, 09_07_33 AM.png` and `NIGRAH Geometric Tech Logo.png` — supplied logo images; the geometric mark is used by the current app.
 - `NIGRAH context.pdf` — project context and full 25-signal framework.
 - `NIGRAH Manipulation Pattern Framework.pdf` — ten patterns, sample formulas/vectors.
 - `NIGRAH Scam Family Taxonomy Framework .pdf` — 30-family taxonomy.

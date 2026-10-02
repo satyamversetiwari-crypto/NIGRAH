@@ -1,10 +1,10 @@
 # NIGRAH
 
-Financial threat intelligence for investor resilience. NIGRAH helps people understand suspicious financial claims through evidence, pattern matching, and clear verification steps.
+NIGRAH is an intelligence and predictive technology initiative for financial threat behavior. It aims to connect traceable public evidence, recurring patterns, entities, and events. Message analysis is one possible interface into the wider intelligence system.
 
 ## Current preview
 
-The web app lives in `apps/web`. It contains a responsive landing page and a browser-only phrase-matching preview for pasted text. This is a prototype: it is not a validated Threat Index or a fraud determination. It does not send or save submitted text.
+The web app lives in `apps/web`. It contains a platform-led landing page and a browser-only phrase-matching preview. This prototype has no official source ingestion, persisted intelligence corpus, calibrated Threat Index, or validated predictions. Submitted text is processed in the browser and is not sent or saved.
 
 ## Run locally
 
@@ -20,6 +20,7 @@ Open http://localhost:3000.
 
 - `PROJECT_CONTEXT.md` — consolidated intelligence model and decisions to resolve.
 - `BUILD_PLAN.md` — staged implementation and service setup.
+- `ROADMAP.md` — prioritized product, data, and engineering milestones with exit conditions.
 - `source_material/` — supplied project briefs, UI/UX specification, and logo.
 
 ## Connected services
