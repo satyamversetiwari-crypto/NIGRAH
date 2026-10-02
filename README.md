@@ -20,6 +20,10 @@ Open http://localhost:3000.
 
 - `PROJECT_CONTEXT.md` — consolidated intelligence model and decisions to resolve.
 - `INTELLIGENCE_SPEC.md` — canonical MVP intelligence specification, version 1.0.
+- `SCORING_ENGINE_SPEC.md` — proposed canonical formulas for TI, confidence, family similarity, and ETI.
+- `DATABASE_SCHEMA.md` — proposed PostgreSQL entities and API surface.
+- `DATA_COLLECTION_SPEC.md` — proposed public-source collection pipeline and dataset targets.
+- `SPEC_REVIEW.md` — cross-spec inconsistencies and decisions to resolve before production scoring or persistence.
 - `BUILD_PLAN.md` — staged implementation and service setup.
 - `ROADMAP.md` — prioritized product, data, and engineering milestones with exit conditions.
 - `source_material/` — supplied project briefs, UI/UX specification, and logo.

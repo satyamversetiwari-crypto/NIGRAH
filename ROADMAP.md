@@ -8,9 +8,10 @@ Build an evidence-based financial threat intelligence system that collects trace
 
 - **Product framing:** landing page repositioned around intelligence infrastructure and predictive research.
 - **Canonical framework:** `INTELLIGENCE_SPEC.md` v1.0 now freezes the MVP scope at 25 signals, 10 patterns, 15 families, TI, a basic knowledge graph, basic ETI, demo-only regional intelligence, and experimental prediction.
-- **Prototype:** browser-only phrase matching is still a preliminary catalog and has not yet been aligned to v1.0; no server persistence, official source ingestion, calibrated score, live graph, or validated prediction exists yet.
+- **Supporting specifications:** scoring, database, and collection v1.0 documents are saved in the repo. Their cross-document conflicts are captured in `SPEC_REVIEW.md`.
+- **Prototype:** browser-only phrase matching now uses the v1.0 signal, pattern, and family catalogs, but has not been evaluated against a reviewed dataset; no server persistence, official source ingestion, calibrated score, live graph, or validated prediction exists yet.
 - **Infrastructure:** private GitHub repository, Vercel frontend, and Neon project are connected. The frontend does not use Neon yet.
-- **Main next milestone:** align the signal and pattern catalog with v1.0, then define data provenance and operational scoring rules before any real TI/ETI score is shown.
+- **Main next milestone:** resolve the scoring and retention conflicts in `SPEC_REVIEW.md`, then implement the canonical catalog and evidence schema before enabling real scores or persistence.
 
 ## Ordered work plan
 
@@ -23,7 +24,19 @@ Build an evidence-based financial threat intelligence system that collects trace
 
 **Remaining specification work:** signal/pattern definitions and scope are locked. Precise SPS, FHS, GRS, RIS, CS, confidence, and ETI transformations still need formal formulas, time windows, provenance requirements, missing-data behavior, and validation rules. No calibrated score is available until those pieces and reviewed data exist.
 
-### 1. Implement the canonical intelligence catalog — next
+### 1. Resolve specification conflicts — next
+
+- [ ] Correct the TSS maximum (the listed v1.0 weights sum to 197, not 194).
+- [ ] Reconcile the two-signal activation minimum with single-signal MP-08 and MP-10.
+- [ ] Confirm the detailed scoring TI formula intentionally supersedes the earlier formula in `INTELLIGENCE_SPEC.md`.
+- [ ] Define how confidence avoids confusing catalog coverage with evidence reliability and avoids circular family inputs.
+- [ ] Define a growth metric that distinguishes flat activity from acceleration; the current cap makes flat and doubled activity both score 100.
+- [ ] Define minimum evidence/tie behavior for family similarity and document static FHS/RIS values as provisional where appropriate.
+- [ ] Resolve user-upload retention: the collection spec says indefinite storage, while current UX promises not to save submitted text.
+
+**Exit condition:** a versioned amendment resolves the issues in `SPEC_REVIEW.md`, including user-submission consent/retention, before scoring or persistence goes live.
+
+### 2. Implement the canonical intelligence catalog
 
 - [ ] Replace preliminary text rules with all 25 canonical TS names, weights, categories, and observable examples.
 - [ ] Align all ten MP-to-TS relationships exactly to v1.0; display matched-signal coverage, not invented weighted pattern scores.
@@ -31,9 +44,9 @@ Build an evidence-based financial threat intelligence system that collects trace
 - [ ] Mark signals that text-only analysis cannot establish (such as deepfake detection or whether contact was unsolicited) as requiring other evidence or context.
 - [ ] Keep TI and ETI outputs withheld until their component calculations and input requirements are formally specified and validated.
 
-**Exit condition:** application catalog and `INTELLIGENCE_SPEC.md` agree on every ID/name/weight/mapping; every finding has a provenance-ready explanation; no unsupported score is shown.
+**Exit condition:** application catalog and canonical specs agree on every ID/name/weight/mapping; every finding has a provenance-ready explanation; no unsupported score is shown.
 
-### 2. Evidence governance and data model
+### 3. Evidence governance and data model
 
 - [ ] Define allowed source types and collection methods; begin with public sources and preserve source terms, attribution, and access limits.
 - [ ] Set evidence fields: source URI, publisher, publication/observation/collection timestamps, geography, language, excerpt or source artifact reference, source tier, review status, and provenance chain.
@@ -43,7 +56,7 @@ Build an evidence-based financial threat intelligence system that collects trace
 
 **Exit condition:** a sample evidence record can be traced from an official/public source through normalization and human review without losing its origin or dates.
 
-### 3. Source acquisition pilot
+### 4. Source acquisition pilot
 
 - [ ] Select a small, documented set of high-value public sources from the acquisition framework.
 - [ ] For each source, document access method, permitted use, update cadence, expected fields, and failure behavior.
@@ -52,7 +65,7 @@ Build an evidence-based financial threat intelligence system that collects trace
 
 **Exit condition:** the pilot corpus is repeatable to refresh, traceable to its sources, and reviewed for quality and coverage gaps.
 
-### 4. Baseline analysis and validation
+### 5. Baseline analysis and validation
 
 - [ ] Align the deterministic extractor and catalog to the adopted signal definitions.
 - [ ] Preserve spans, source IDs, extraction method, rule/model version, and explanation for every finding.
@@ -63,7 +76,7 @@ Build an evidence-based financial threat intelligence system that collects trace
 
 **Exit condition:** a versioned baseline has reproducible evaluation results and known limitations. A score is withheld if its required inputs are missing.
 
-### 5. Application API and persistence
+### 6. Application API and persistence
 
 - [ ] Create database migrations and least-privilege runtime credentials; keep secrets out of Git.
 - [ ] Build an API for public intelligence records and analysis jobs with validation, rate limits, and clear retention controls.
@@ -73,7 +86,7 @@ Build an evidence-based financial threat intelligence system that collects trace
 
 **Exit condition:** an analysis can be traced to versioned evidence and code without exposing credentials or retaining user text by default.
 
-### 6. Intelligence graph and emerging-threat research
+### 7. Intelligence graph and emerging-threat research
 
 - [ ] Model relationships among evidence, signals, patterns, families, entities, platforms, regions, languages, and time.
 - [ ] Add graph exploration only after records have stable IDs and provenance.
@@ -82,7 +95,7 @@ Build an evidence-based financial threat intelligence system that collects trace
 
 **Exit condition:** each surfaced relationship or candidate threat can be inspected back to supporting evidence, time window, and uncertainty.
 
-### 7. Product surfaces and expansion
+### 8. Product surfaces and expansion
 
 - [ ] Treat text analysis as one entry point into the intelligence model.
 - [ ] Add screenshot/OCR and URL analysis after text provenance and evaluation are reliable.

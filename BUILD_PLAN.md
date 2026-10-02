@@ -7,11 +7,11 @@ The current frontend is a mobile-first introduction to NIGRAH's intelligence mod
 ## Sequence
 
 1. **Product foundation:** initial shell, supplied logo, responsive page, and prototype analysis interface are in place. Product positioning now leads with intelligence infrastructure.
-2. **Canonical intelligence specification:** v1.0 is adopted in `INTELLIGENCE_SPEC.md`; it freezes MVP scope and the target TI formula. Precise component transformations still need operational definitions.
-3. **Canonical seed catalog:** align implementation with the 25 signal definitions/weights, ten pattern memberships, and 15 family mappings in v1.0. Do not use weighted pattern scores that the spec does not define.
-4. **Evidence governance and source pilot:** define provenance, permitted public-source collection, review, deduplication, recency, and retention; build and annotate a small source corpus.
+2. **Canonical specifications:** intelligence, scoring, schema, and collection v1.0 documents are saved in the repo. `SPEC_REVIEW.md` records math, activation, confidence, growth, provenance, and retention inconsistencies to settle before implementation.
+3. **Canonical seed catalog:** align code with the 25 signals, ten pattern memberships, and 15 families; use no unapproved scoring behavior.
+4. **Evidence governance and source pilot:** define provenance, permitted public-source collection, review, deduplication, recency, and retention; then build and annotate a small source corpus.
 5. **Analysis baseline and evaluation:** preserve evidence provenance and measure against reviewed examples before calibrating TI, confidence, or ETI.
-6. **Persistence and API:** implement PostgreSQL schema/migrations and an API after data and retention fields are agreed; keep submitted text ephemeral by default.
+6. **Persistence and API:** implement PostgreSQL schema/migrations and an API after data and retention fields are agreed. The collection spec proposes indefinite user-upload retention, while the prototype currently promises it is not saved; resolve this conflict before enabling persistence.
 7. **Intelligence graph and prediction:** add temporal relationships and emerging-threat candidates only after the corpus, baseline, and evaluation are credible.
 8. **Expand inputs and surfaces:** add OCR, URLs, audio/video, analyst tools, and public intelligence views in dependency order.
 

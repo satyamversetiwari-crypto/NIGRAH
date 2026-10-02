@@ -141,7 +141,8 @@ Key implementation constraints:
 - Web frontend: Next.js app in `apps/web`, deployed at [nigrah.vercel.app](https://nigrah.vercel.app). Pushes to `main` trigger Vercel deployments.
 - Database: Neon project `NIGRAH` in Singapore is linked to the Vercel project. The app has no runtime database connection or schema yet. Use a restricted application role before production data access.
 - Current frontend: platform-led landing page plus a browser-only text phrase preview. It does not ingest official sources, persist evidence, calculate a calibrated Threat Index, or make validated predictions.
-- Product and engineering priorities and exit conditions are tracked in [`ROADMAP.md`](ROADMAP.md); this file retains the fuller source synthesis and unresolved model decisions.
+- Canonical specs: [`INTELLIGENCE_SPEC.md`](INTELLIGENCE_SPEC.md), [`SCORING_ENGINE_SPEC.md`](SCORING_ENGINE_SPEC.md), [`DATABASE_SCHEMA.md`](DATABASE_SCHEMA.md), and [`DATA_COLLECTION_SPEC.md`](DATA_COLLECTION_SPEC.md). Cross-document defects and implementation decisions are tracked in [`SPEC_REVIEW.md`](SPEC_REVIEW.md).
+- Product and engineering priorities and exit conditions are tracked in [`ROADMAP.md`](ROADMAP.md); this file retains the fuller source synthesis and legacy notes.
 - Never commit connection strings or secrets. Keep user-submitted text ephemeral unless a separate, explicit retention policy is adopted.
 
 ## Development sequence in the brief
@@ -183,5 +184,8 @@ All provided originals are copied into `source_material/`:
 - `NIGRAH Knowledge Graph & Prediction Engine.pdf` — graph and emergence concepts.
 - `NIGRAH Analyze Scam Risk Engine.pdf` — input processing and report journey.
 - `INTELLIGENCE_SPEC.md` — adopted canonical MVP specification, version 1.0.
+- `SCORING_ENGINE_SPEC.md` — detailed scoring framework; includes unresolved formula inconsistencies listed in `SPEC_REVIEW.md`.
+- `DATABASE_SCHEMA.md` — canonical proposed database schema.
+- `DATA_COLLECTION_SPEC.md` — canonical proposed collection process and source tiers.
 
 The main PDF text was extracted to prepare this synthesis. Some PDFs contain malformed object references, but all pages yielded readable text; the original PDFs are retained unchanged for later inspection.
