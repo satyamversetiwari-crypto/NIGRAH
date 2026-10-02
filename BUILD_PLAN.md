@@ -15,7 +15,9 @@ The first vertical slice is a mobile-first web landing page and text-message pre
 
 ## Account setup needed
 
-- GitHub CLI is installed but its configured login token is invalid. Re-authenticate interactively with `gh auth login` before creating/pushing the repository. Never paste credentials here.
-- Vercel CLI is not installed. Connect the GitHub repository in Vercel or install/login to the CLI, then import the Next.js app from `apps/web`.
-- Neon PostgreSQL is proposed; create a project and set `DATABASE_URL` in local ignored environment config and provider secrets only. Never commit connection strings.
-- Recommended initial repo visibility: private. Recommended database: Neon PostgreSQL.
+- GitHub: private repository [`satyamversetiwari-crypto/NIGRAH`](https://github.com/satyamversetiwari-crypto/NIGRAH), `main` branch. The first project commit is pushed.
+- Vercel: project `nigrah` is deployed from `apps/web` at [nigrah.vercel.app](https://nigrah.vercel.app). Git pushes to `main` deploy automatically.
+- Neon: project `NIGRAH` exists in AWS Asia Pacific 1 (Singapore), Free plan. The existing Neon account is linked to only the NIGRAH Vercel project via Neon Previews integration; integration-managed database environment variables are configured in Vercel. The app does not yet query the database.
+- The integration currently uses the default `neondb_owner` role. Before storing real user data or operating in production, create a restricted application role and use it for runtime access.
+- Vercel CLI is not installed. Dashboard deployment is connected, so the CLI is optional for current frontend work.
+- Never commit connection strings or secrets; keep local secrets in ignored environment files and provider secrets in Vercel. The API will need its own host once FastAPI is implemented.

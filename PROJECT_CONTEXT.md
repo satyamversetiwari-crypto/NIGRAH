@@ -165,6 +165,8 @@ These source documents are drafts, and their differences should remain visible u
 All provided originals are copied into `source_material/`:
 
 - `NIGRAH MVP v1.0.txt` — pasted product/MVP brief.
+- `Design Draft.pdf` — UI/UX product specification.
+- `ChatGPT Image Oct 2, 2026, 09_07_33 AM.png` — supplied logo image.
 - `NIGRAH context.pdf` — project context and full 25-signal framework.
 - `NIGRAH Manipulation Pattern Framework.pdf` — ten patterns, sample formulas/vectors.
 - `NIGRAH Scam Family Taxonomy Framework .pdf` — 30-family taxonomy.
