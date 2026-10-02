@@ -1,68 +1,99 @@
 /**
- * NIGRAH deterministic text analysis, catalog v0.1.
- * Phrase rules are an exploratory preview, not a trained or calibrated model.
+ * NIGRAH MVP catalog aligned to INTELLIGENCE_SPEC.md v1.0.
+ * Text rules are illustrative candidates; they are not validated detectors.
  */
-export const catalogVersion = "nigrah-text-catalog/0.1.0";
+export const catalogVersion = "nigrah-intelligence-spec/1.0.0";
 
-type SignalRule = { id: string; label: string; patterns: RegExp[] };
+export type SignalDefinition = {
+  id: string;
+  name: string;
+  category: string;
+  weight: number;
+  examples: string[];
+  textRules: RegExp[];
+  limitation?: string;
+};
+
 export type SignalEvidence = { id: string; label: string; matches: string[] };
-export type PatternMatch = { id: string; label: string; score: number; signals: string[] };
+export type PatternMatch = {
+  id: string;
+  label: string;
+  matchedSignals: string[];
+  totalSignals: number;
+};
 
-const signals: SignalRule[] = [
-  { id: "TS-01", label: "Guaranteed or fixed returns", patterns: [/\bguaranteed returns?\b/ig, /\brisk[- ]free\b/ig, /\bassured returns?\b/ig, /\bfixed (?:daily|weekly|monthly) returns?\b/ig] },
-  { id: "TS-02", label: "Unusually high returns", patterns: [/\b\d+\s*%\s*(?:daily|weekly|monthly)\b/ig, /\bdouble your money\b/ig, /\b\d+x returns?\b/ig] },
-  { id: "TS-03", label: "Regulatory or official authority claim", patterns: [/\bSEBI[- ](?:registered|certified|approved)\b/ig, /\bgovernment[- ]approved\b/ig, /\blicensed (?:by|with) SEBI\b/ig] },
-  { id: "TS-04", label: "Impersonated identity", patterns: [/\bofficial (?:SEBI|broker|bank) (?:account|support)\b/ig, /\b(?:we are|I'm) (?:from|with) SEBI\b/ig] },
-  { id: "TS-05", label: "Expert or insider positioning", patterns: [/\binsider (?:information|expert|tip)\b/ig, /\bcertified analyst\b/ig, /\bmarket expert\b/ig] },
-  { id: "TS-06", label: "Urgency", patterns: [/\bact now\b/ig, /\bjoin today\b/ig, /\blast chance\b/ig, /\bclosing soon\b/ig, /\bonly today\b/ig] },
-  { id: "TS-07", label: "Scarcity or exclusivity", patterns: [/\bonly \d+ seats?\b/ig, /\blimited seats?\b/ig, /\binvite[- ]only\b/ig, /\bVIP slots?\b/ig] },
-  { id: "TS-08", label: "Time-limited offer", patterns: [/\boffer expires? (?:today|in \d+ hours?)\b/ig, /\bsubscribe before midnight\b/ig] },
-  { id: "TS-09", label: "Social proof or profit claims", patterns: [/\bprofit screenshots?\b/ig, /\beveryone is earning\b/ig, /\bsuccess stories\b/ig, /\b(?:members|users) earned \d+\b/ig] },
-  { id: "TS-10", label: "Group or crowd pressure", patterns: [/\bjoin (?:our|the) (?:telegram|whatsapp) group\b/ig, /\bthousands have joined\b/ig] },
-  { id: "TS-11", label: "Trust-building claim", patterns: [/\btrusted (?:by|for) (?:years|thousands)\b/ig, /\bpersonally guarantee\b/ig] },
-  { id: "TS-12", label: "Exclusive access claim", patterns: [/\bexclusive access\b/ig, /\bprivate investor circle\b/ig, /\bselected investors only\b/ig] },
-  { id: "TS-13", label: "Relationship or mentorship framing", patterns: [/\bI will guide you personally\b/ig, /\byour personal mentor\b/ig] },
-  { id: "TS-14", label: "Testimonial or endorsement", patterns: [/\bcelebrity endorsed\b/ig, /\bendorsed by [A-Z][\w ]+\b/g, /\bclient testimonials?\b/ig] },
-  { id: "TS-15", label: "Payment diversion", patterns: [/\bpersonal (?:bank )?account\b/ig, /\bpay (?:to|into)\b/ig, /\btransfer (?:the )?funds? now\b/ig, /\bUPI ID\b/ig] },
-  { id: "TS-16", label: "Withdrawal restriction or advance fee", patterns: [/\bfee before withdrawal\b/ig, /\btax before withdrawal\b/ig, /\bwithdrawal.{0,35}(?:fee|blocked|unlock)\b/ig] },
-  { id: "TS-17", label: "Compounding or bonus promise", patterns: [/\bbonus returns?\b/ig, /\bcompound(?:ed|ing)? daily\b/ig, /\bdouble your investment\b/ig] },
-  { id: "TS-18", label: "Additional payment to release funds", patterns: [/\bpay (?:a )?(?:release|verification|processing) fee\b/ig, /\bpay to unlock (?:your )?funds\b/ig] },
-  { id: "TS-19", label: "Claimed non-public information", patterns: [/\binsider information\b/ig, /\bnon-public (?:information|news)\b/ig, /\bconfidential market tip\b/ig] },
-  { id: "TS-20", label: "Unverifiable source claim", patterns: [/\bsecret source\b/ig, /\bsource cannot be disclosed\b/ig, /\bconfidential source\b/ig] },
-  { id: "TS-21", label: "Complexity used to justify returns", patterns: [/\bproprietary algorithm\b/ig, /\bquantum trading system\b/ig, /\bcomplex strategy\b/ig] },
-  { id: "TS-22", label: "Targeted or opportunistic approach", patterns: [/\bwe selected you\b/ig, /\byou have been chosen\b/ig, /\btargeted offer\b/ig] },
-  { id: "TS-23", label: "Misused official identity", patterns: [/\bSEBI (?:approval|certificate|logo)\b/ig, /\bofficial government seal\b/ig] },
-  { id: "TS-24", label: "Digital identity or platform claim", patterns: [/\bofficial trading app\b/ig, /\bdownload our investment app\b/ig, /\bclone (?:website|app)\b/ig] },
-  { id: "TS-25", label: "Referral or recruitment pressure", patterns: [/\binvite \d+ friends\b/ig, /\bearn (?:more|a bonus) for each referral\b/ig, /\brecruit (?:two|three|more) (?:people|members)\b/ig] },
+export const signals: SignalDefinition[] = [
+  { id: "TS-01", name: "Guaranteed Return", category: "Authority", weight: 10, examples: ["Guaranteed 20% returns", "Fixed monthly income", "Risk-free profits"], textRules: [/\bguaranteed?\s+(?:\d+%\s+)?returns?\b/ig, /\bfixed\s+(?:daily|weekly|monthly)\s+(?:income|returns?)\b/ig, /\brisk[- ]free\s+(?:profits?|returns?)\b/ig] },
+  { id: "TS-02", name: "Unrealistic Return", category: "Authority", weight: 9, examples: ["Double money in 30 days", "5x profit guaranteed"], textRules: [/\bdouble\s+(?:your\s+)?money\s+in\s+\d+\s+days?\b/ig, /\b\d+\s*x\s+(?:profit|returns?)\b/ig, /\b\d+\s*%\s*(?:daily|weekly|monthly)\s+returns?\b/ig] },
+  { id: "TS-03", name: "Fake Authority", category: "Authority", weight: 9, examples: ["Fake SEBI analyst", "Fake investment advisor"], textRules: [/\b(?:fake|unofficial)\s+(?:SEBI\s+)?(?:analyst|investment advisor)\b/ig, /\bSEBI[- ](?:certified|approved)\s+analyst\b/ig] },
+  { id: "TS-04", name: "Impersonation", category: "Authority", weight: 10, examples: ["Fake broker", "Fake regulator"], textRules: [/\b(?:fake|clone)\s+(?:broker|regulator|bank|SEBI)\b/ig, /\bpretend(?:ing)?\s+to\s+be\s+(?:a\s+)?(?:broker|regulator|bank|SEBI)\b/ig] },
+  { id: "TS-05", name: "Unregistered Entity", category: "Authority", weight: 8, examples: ["Financial activity without visible registration"], textRules: [/\bunregistered\s+(?:entity|advisor|broker|investment firm)\b/ig, /\bnot\s+registered\s+with\s+SEBI\b/ig], limitation: "Text alone cannot establish registration status; verify through an authoritative registry." },
+  { id: "TS-06", name: "Urgency", category: "Pressure", weight: 8, examples: ["Join today", "Offer expires tonight"], textRules: [/\bjoin\s+today\b/ig, /\boffer\s+expires?\s+(?:tonight|today)\b/ig, /\bact\s+now\b/ig, /\blast\s+chance\b/ig] },
+  { id: "TS-07", name: "Scarcity", category: "Pressure", weight: 8, examples: ["Limited seats", "Last chance"], textRules: [/\blimited\s+(?:seats?|spots?|slots?)\b/ig, /\bonly\s+\d+\s+(?:seats?|spots?|slots?)\s+left\b/ig] },
+  { id: "TS-08", name: "FOMO", category: "Pressure", weight: 7, examples: ["Everyone is joining", "Don't miss out"], textRules: [/\beveryone\s+is\s+joining\b/ig, /\bdon['’]?t\s+miss\s+out\b/ig, /\byou['’]?ll\s+miss\s+out\b/ig] },
+  { id: "TS-09", name: "Social Proof", category: "Social", weight: 7, examples: ["Profit screenshots", "Success stories"], textRules: [/\bprofit\s+screenshots?\b/ig, /\bsuccess\s+stories\b/ig, /\bmembers\s+(?:are\s+)?earning\b/ig] },
+  { id: "TS-10", name: "Community Pressure", category: "Social", weight: 6, examples: ["VIP group", "Exclusive investors club"], textRules: [/\bVIP\s+group\b/ig, /\bexclusive\s+investors?\s+club\b/ig, /\bjoin\s+(?:our|the)\s+(?:telegram|whatsapp)\s+group\b/ig] },
+  { id: "TS-11", name: "Relationship Building", category: "Trust Harvesting", weight: 6, examples: ["Personal mentor", "Dedicated advisor"], textRules: [/\bpersonal\s+mentor\b/ig, /\bdedicated\s+advisor\b/ig, /\bi['’]?ll\s+guide\s+you\s+personally\b/ig] },
+  { id: "TS-12", name: "Exclusivity", category: "Trust Harvesting", weight: 6, examples: ["Invite-only access", "Secret strategy"], textRules: [/\binvite[- ]only\s+(?:access|group|membership)\b/ig, /\bsecret\s+strategy\b/ig, /\bselected\s+investors?\s+only\b/ig] },
+  { id: "TS-13", name: "Reciprocity", category: "Trust Harvesting", weight: 5, examples: ["Free signal", "Free training"], textRules: [/\bfree\s+(?:signal|training|investment\s+course)\b/ig, /\bcomplimentary\s+(?:signal|training|consultation)\b/ig] },
+  { id: "TS-14", name: "Lifestyle Projection", category: "Trust Harvesting", weight: 5, examples: ["Luxury cars", "Wealth displays"], textRules: [/\bluxury\s+(?:cars?|lifestyle|villa|yacht)\b/ig, /\b(?:my|our)\s+(?:new\s+)?(?:supercar|private\s+jet)\b/ig] },
+  { id: "TS-15", name: "Payment Diversion", category: "Financial Control", weight: 10, examples: ["Personal UPI payment", "Direct transfer requests"], textRules: [/\bpersonal\s+(?:bank\s+)?account\b/ig, /\bUPI\s+(?:ID|payment)\b/ig, /\btransfer\s+(?:the\s+)?funds?\s+to\s+(?:me|my|this)\b/ig] },
+  { id: "TS-16", name: "Withdrawal Restriction", category: "Financial Control", weight: 10, examples: ["Pay fee before withdrawal", "Tax release charge"], textRules: [/\bfee\s+before\s+withdrawal\b/ig, /\btax\s+(?:release\s+)?charge\b/ig, /\bwithdrawal.{0,35}(?:fee|blocked|unlock)\b/ig] },
+  { id: "TS-17", name: "Escalating Investment", category: "Financial Control", weight: 8, examples: ["Invest more to unlock profits"], textRules: [/\binvest\s+more\s+to\s+unlock\s+(?:profits?|returns?|funds?)\b/ig, /\badd\s+(?:more\s+)?funds?\s+to\s+release\s+(?:your\s+)?profits?\b/ig] },
+  { id: "TS-18", name: "Borrow-To-Invest", category: "Financial Control", weight: 8, examples: ["Take a loan for investing"], textRules: [/\btake\s+(?:out\s+)?a\s+loan\s+to\s+invest\b/ig, /\bborrow\s+money\s+to\s+invest\b/ig, /\buse\s+your\s+credit\s+card\s+to\s+invest\b/ig] },
+  { id: "TS-19", name: "Non-Transparent Claims", category: "Information", weight: 7, examples: ["No explanation of strategy"], textRules: [/\bstrategy\s+(?:is\s+)?(?:secret|confidential)\b/ig, /\bwe\s+(?:cannot|can't)\s+explain\s+(?:the\s+)?(?:method|strategy)\b/ig, /\bno\s+details\s+(?:will\s+be|are)\s+(?:shared|provided)\b/ig] },
+  { id: "TS-20", name: "Complexity Shield", category: "Information", weight: 6, examples: ["Technical jargon hiding risk"], textRules: [/\bproprietary\s+algorithm\b/ig, /\bquantum\s+trading\s+system\b/ig, /\bcomplex\s+(?:strategy|formula)\s+(?:you\s+)?(?:won['’]?t|cannot)\s+understand\b/ig] },
+  { id: "TS-21", name: "Insider Information", category: "Information", weight: 8, examples: ["Secret stock tip", "Confidential opportunity"], textRules: [/\binsider\s+(?:information|tip)\b/ig, /\bconfidential\s+(?:stock\s+)?(?:tip|opportunity)\b/ig, /\bsecret\s+stock\s+tip\b/ig] },
+  { id: "TS-22", name: "Unsolicited Contact", category: "Information", weight: 7, examples: ["Random WhatsApp message", "Cold call"], textRules: [/\bunsolicited\s+(?:investment\s+)?(?:message|offer|call)\b/ig, /\bcold\s+call\s+(?:about|offering)\s+(?:an?\s+)?investment\b/ig], limitation: "Whether contact was unsolicited may require recipient context, not message text alone." },
+  { id: "TS-23", name: "Deepfake Authority", category: "Emerging", weight: 10, examples: ["AI-generated expert"], textRules: [/\bdeepfake\s+(?:advisor|analyst|expert|official)\b/ig, /\bAI[- ]generated\s+(?:advisor|analyst|expert|official)\b/ig], limitation: "Text matches can only flag a claim about synthetic media; detection requires media and identity verification." },
+  { id: "TS-24", name: "Fake Trading Application", category: "Emerging", weight: 10, examples: ["Clone broker apps"], textRules: [/\b(?:fake|clone)\s+(?:trading|broker|investment)\s+app(?:lication)?\b/ig, /\bunofficial\s+trading\s+app\b/ig] },
+  { id: "TS-25", name: "Referral Pyramid", category: "Emerging", weight: 9, examples: ["Recruit to earn"], textRules: [/\brecruit\s+(?:people|members|friends)\s+to\s+earn\b/ig, /\binvite\s+\d+\s+friends\s+to\s+(?:earn|get\s+paid)\b/ig, /\breferral\s+pyramid\b/ig] },
 ];
 
-const patternDefs = [
-  { id: "MP-01", label: "Authority exploitation", weights: { "TS-03": .35, "TS-04": .35, "TS-05": .15, "TS-23": .15 } },
-  { id: "MP-02", label: "Greed and exceptional-return appeal", weights: { "TS-01": .4, "TS-02": .4, "TS-17": .2 } },
-  { id: "MP-03", label: "Pressure and urgency", weights: { "TS-06": .5, "TS-07": .3, "TS-08": .2 } },
-  { id: "MP-04", label: "Social validation", weights: { "TS-09": .45, "TS-10": .3, "TS-14": .25 } },
-  { id: "MP-05", label: "Trust harvesting", weights: { "TS-11": .4, "TS-12": .3, "TS-13": .3 } },
-  { id: "MP-06", label: "Information asymmetry", weights: { "TS-19": .4, "TS-20": .35, "TS-21": .25 } },
-  { id: "MP-07", label: "Financial entrapment", weights: { "TS-15": .3, "TS-16": .35, "TS-18": .35 } },
-  { id: "MP-08", label: "Opportunistic targeting", weights: { "TS-22": 1 } },
-  { id: "MP-09", label: "Digital identity manipulation", weights: { "TS-04": .35, "TS-23": .3, "TS-24": .35 } },
-  { id: "MP-10", label: "Network expansion", weights: { "TS-25": .65, "TS-10": .35 } },
-];
+export const patterns = [
+  { id: "MP-01", name: "Authority Exploitation", signals: ["TS-03", "TS-04", "TS-05", "TS-23"] },
+  { id: "MP-02", name: "Greed Engineering", signals: ["TS-01", "TS-02", "TS-08"] },
+  { id: "MP-03", name: "Pressure Engineering", signals: ["TS-06", "TS-07"] },
+  { id: "MP-04", name: "Social Validation", signals: ["TS-09", "TS-10"] },
+  { id: "MP-05", name: "Trust Harvesting", signals: ["TS-11", "TS-12", "TS-13", "TS-14"] },
+  { id: "MP-06", name: "Information Asymmetry", signals: ["TS-19", "TS-20", "TS-21"] },
+  { id: "MP-07", name: "Financial Entrapment", signals: ["TS-15", "TS-16", "TS-17", "TS-18"] },
+  { id: "MP-08", name: "Opportunistic Targeting", signals: ["TS-22"] },
+  { id: "MP-09", name: "Identity Manipulation", signals: ["TS-04", "TS-23", "TS-24"] },
+  { id: "MP-10", name: "Network Expansion", signals: ["TS-25"] },
+] as const;
+
+export const scamFamilies = [
+  { id: "SF-01", name: "Fake Advisor Fraud", patterns: ["MP-01", "MP-05"] },
+  { id: "SF-02", name: "Fake Research Analyst Fraud", patterns: ["MP-01", "MP-06"] },
+  { id: "SF-03", name: "Telegram Signal Fraud", patterns: ["MP-02", "MP-03", "MP-04"] },
+  { id: "SF-04", name: "WhatsApp Tip Scam", patterns: ["MP-02", "MP-03", "MP-08"] },
+  { id: "SF-05", name: "Guaranteed Return Scheme", patterns: ["MP-02", "MP-05"] },
+  { id: "SF-06", name: "Ponzi Scheme", patterns: ["MP-02", "MP-05", "MP-10"] },
+  { id: "SF-07", name: "Pyramid Scheme", patterns: ["MP-10", "MP-05"] },
+  { id: "SF-08", name: "Pump And Dump", patterns: ["MP-02", "MP-04", "MP-06"] },
+  { id: "SF-09", name: "Fake Trading Application", patterns: ["MP-09", "MP-07"] },
+  { id: "SF-10", name: "Clone Broker Platform", patterns: ["MP-09", "MP-01"] },
+  { id: "SF-11", name: "Fake IPO Scam", patterns: ["MP-01", "MP-02"] },
+  { id: "SF-12", name: "Recovery Scam", patterns: ["MP-05", "MP-07"] },
+  { id: "SF-13", name: "Investment Coaching Scam", patterns: ["MP-05", "MP-02"] },
+  { id: "SF-14", name: "Premium Membership Scam", patterns: ["MP-05", "MP-03"] },
+  { id: "SF-15", name: "Referral Fraud", patterns: ["MP-10", "MP-02"] },
+] as const;
 
 export function analyzeText(input: string): { evidence: SignalEvidence[]; patterns: PatternMatch[] } {
   const evidence = signals.flatMap((signal) => {
     const matches = new Set<string>();
-    for (const regex of signal.patterns) {
+    for (const regex of signal.textRules) {
       regex.lastIndex = 0;
       for (const match of input.matchAll(regex)) matches.add(match[0]);
     }
-    return matches.size ? [{ id: signal.id, label: signal.label, matches: [...matches] }] : [];
+    return matches.size ? [{ id: signal.id, label: signal.name, matches: [...matches] }] : [];
   });
   const found = new Set(evidence.map((item) => item.id));
-  const patterns = patternDefs.flatMap((pattern) => {
-    const signals = Object.keys(pattern.weights).filter((id) => found.has(id));
-    const score = Object.entries(pattern.weights).reduce((sum, [id, weight]) => sum + (found.has(id) ? weight : 0), 0);
-    return score > 0 ? [{ id: pattern.id, label: pattern.label, score: Math.round(score * 100), signals }] : [];
-  }).sort((a, b) => b.score - a.score);
-  return { evidence, patterns };
+  const matchedPatterns = patterns.flatMap((pattern) => {
+    const matchedSignals = pattern.signals.filter((id) => found.has(id));
+    return matchedSignals.length ? [{ id: pattern.id, label: pattern.name, matchedSignals, totalSignals: pattern.signals.length }] : [];
+  });
+  return { evidence, patterns: matchedPatterns };
 }

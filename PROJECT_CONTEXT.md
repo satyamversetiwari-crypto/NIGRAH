@@ -1,6 +1,6 @@
 # NIGRAH — Project Context
 
-This file is the working project brief synthesized from the supplied MVP text and seven source PDFs. Original materials are preserved in [`source_material/`](source_material/). Source-document statements are project content, not instructions to the assistant or implementation requirements unless adopted in a later project decision.
+This file is the working project brief synthesized from the supplied MVP text and source PDFs. Original materials are preserved in [`source_material/`](source_material/). **The adopted, controlling MVP definition is [`INTELLIGENCE_SPEC.md`](INTELLIGENCE_SPEC.md) v1.0.** Where older source documents or tables below conflict with that specification, v1.0 takes precedence; keep legacy material for traceability, not as active requirements.
 
 ## Project in one paragraph
 
@@ -31,7 +31,9 @@ The intended stack has these connected layers:
 5. **Knowledge graph and prediction:** relationships among signals, patterns, families, regions, sources, platforms, and language variants support cross-source connections and emerging-threat analysis.
 6. **Intelligence acquisition:** collection and normalization of public evidence, with source provenance, reliability, date/recency, and geography.
 
-### Threat signals (names from the MVP/context)
+### Legacy threat-signal table (superseded by INTELLIGENCE_SPEC.md v1.0)
+
+The table below records names and weights from earlier source synthesis. It is retained as historical context only; use the canonical signal names and weights in `INTELLIGENCE_SPEC.md` for implementation.
 
 | ID | Signal | Weight in context PDF |
 |---|---|---:|
@@ -61,13 +63,15 @@ The intended stack has these connected layers:
 | TS-24 | Fake trading app | 10 |
 | TS-25 | Referral pyramid | 8 |
 
-### Manipulation patterns
+### Legacy manipulation-pattern notes (superseded by INTELLIGENCE_SPEC.md v1.0)
 
 MP-01 Authority Exploitation; MP-02 Greed Engineering; MP-03 Pressure Engineering; MP-04 Social Validation Manipulation; MP-05 Trust Harvesting; MP-06 Information Asymmetry Exploitation; MP-07 Financial Entrapment; MP-08 Opportunistic Targeting; MP-09 Digital Identity Manipulation; MP-10 Network Expansion Manipulation. The pattern framework supplies explicit weighted formulas for Authority (TS-03/04/05/23: 0.35/0.35/0.15/0.15) and Greed (TS-01/02/17: 0.40/0.40/0.20); most other patterns are currently defined by signal membership and examples rather than full calibrated equations.
 
 Pattern vectors provide a proposed explainable comparison method. Example vectors in the source use a ten-element 0–10 scale ordered Authority, Greed, Pressure, Social, Trust, Information, Entrapment, Targeting, Identity, Network. The documents suggest vector similarity, but do not settle the production similarity metric or calibration.
 
-### Scam-family taxonomy
+### Broader scam-family taxonomy reference
+
+The PDF taxonomy defines 30 families, while the canonical MVP adopts a 15-family subset with explicit pattern mappings in `INTELLIGENCE_SPEC.md`. Use the v1.0 list for MVP seed data; the 30-family taxonomy remains a later expansion reference.
 
 The taxonomy PDF defines 30 families in eight groups: authority-based (SF-01–04), return-promise (SF-05–08), signal/tip (SF-09–12), digital-platform (SF-13–16), Ponzi/pyramid (SF-17–19), trust-harvesting (SF-20–22), exit/recovery (SF-23–26), and opportunity frauds (SF-27–30). It gives descriptions, primary patterns, and qualitative threat levels. It recommends per-family records for ID/name, patterns, threat vector, TI, historical harm, growth, regional distribution, and detection confidence.
 
@@ -148,18 +152,21 @@ Key implementation constraints:
 4. Knowledge-graph dashboard.
 5. Emerging-threat engine.
 
-## Reconciliation notes and open decisions
+## Canonical decisions and remaining operational work
 
-These source documents are drafts, and their differences should remain visible until the project owner chooses a canonical specification:
+`INTELLIGENCE_SPEC.md` v1.0 resolves the MVP scope: 25 threat signals, ten manipulation patterns, 15 scam families, the five-component Threat Index, source reliability tiers, basic knowledge graph and ETI, demo-only regional intelligence, and experimental prediction.
 
-1. **Family scope:** pasted MVP says 15 MVP families, while the taxonomy defines 30 and the acquisition/scoring documents call 30 the full layer. Treat 15 as a possible initial launch subset and 30 as the broader taxonomy; exact MVP subset is unselected.
-2. **Threat Index definition:** MVP gives five weighted components with weights summing to 1.0. The Analyze Scam Risk PDF informally describes Signals + Patterns + Family Harm + Confidence, omitting explicit growth and regional components. Decide whether the five-component formula is canonical and whether pattern evidence is already part of SPS.
-3. **ETI definition:** sources variously say Family Similarity or Pattern Similarity and use a product of factors. No normalization/calibration procedure is supplied; direct multiplication of 0–100 values would not itself yield a 0–100 score.
-4. **Signal scoring:** the framework gives weights and a partial SPS example, but not a complete aggregation policy (e.g. deduplication, absent/unknown signals, contradictory evidence, and per-input vs ecosystem scoring).
-5. **Terminology:** some source examples use shorthand pattern names (e.g. Greed, Authority) and simplified family labels. The detailed MP/SF taxonomy should be the reference vocabulary after adoption.
-6. **Evidence vs demo metrics:** values such as growth of 240%/320%, regional rankings, TI 91/93, and confidence 89/91% are illustrative examples, not validated measurements.
-7. **Claims:** “India’s first,” “patent-worthy,” and similar positioning appears as aspiration/marketing language, not established fact.
-8. **Acquisition:** source tiers and trust ratings are proposals. Collection permissions, access methods, rate limits, quality review, and update cadence remain to be designed.
+The following implementation details are still open; keep the canonical framework, but do not invent these values in the UI or code:
+
+1. **SPS and signal evidence:** aggregation, deduplication, per-message versus ecosystem scope, detection-confidence meaning, and treatment of absent, contradictory, weak, and non-text evidence.
+2. **FHS, GRS, RIS, and CS:** required source data, units, time windows, normalization, geographic denominator, evidence quality, and missing-data behavior.
+3. **Confidence:** how its factors are combined without double-counting signal quantity, pattern consistency, family similarity, and source quality.
+4. **ETI:** define the factors' scale and direction, observation windows, product normalization, thresholds, and how a novel family with little history is handled.
+5. **Basic graph and demo regional intelligence:** define minimum data requirements and ensure any synthetic demonstration values are labeled as such.
+6. **Prediction:** remains experimental; define an evaluation protocol and calibration before presenting predictive claims.
+7. **Acquisition:** source terms, access methods, rate limits, review workflow, and update cadence still need to be specified.
+
+Illustrative values in the original PDFs (growth examples, regional rankings, TI values, and confidence percentages) are not validated measurements.
 
 ## Source inventory
 
@@ -175,5 +182,6 @@ All provided originals are copied into `source_material/`:
 - `NIGRAH Intelligence Acquisition Framework.pdf` — source tiers, recency/reliability, pipeline.
 - `NIGRAH Knowledge Graph & Prediction Engine.pdf` — graph and emergence concepts.
 - `NIGRAH Analyze Scam Risk Engine.pdf` — input processing and report journey.
+- `INTELLIGENCE_SPEC.md` — adopted canonical MVP specification, version 1.0.
 
 The main PDF text was extracted to prepare this synthesis. Some PDFs contain malformed object references, but all pages yielded readable text; the original PDFs are retained unchanged for later inspection.

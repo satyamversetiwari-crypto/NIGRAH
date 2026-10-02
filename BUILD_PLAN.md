@@ -7,12 +7,13 @@ The current frontend is a mobile-first introduction to NIGRAH's intelligence mod
 ## Sequence
 
 1. **Product foundation:** initial shell, supplied logo, responsive page, and prototype analysis interface are in place. Product positioning now leads with intelligence infrastructure.
-2. **Canonical intelligence specification:** reconcile signal definitions, MVP family scope, scoring assumptions, and uncertainty rules before showing real risk or predictive scores.
-3. **Evidence governance and source pilot:** define provenance, permitted public-source collection, review, deduplication, recency, and retention; build and annotate a small source corpus.
-4. **Analysis baseline and evaluation:** align extraction to the adopted catalog, preserve evidence provenance, and measure against a reviewed dataset before calibration.
-5. **Persistence and API:** implement PostgreSQL schema/migrations and an API after data and retention fields are agreed; keep submitted text ephemeral by default.
-6. **Intelligence graph and prediction:** add temporal relationships and emerging-threat candidates only after the corpus, baseline, and evaluation are credible.
-7. **Expand inputs and surfaces:** add OCR, URLs, audio/video, analyst tools, and public intelligence views in dependency order.
+2. **Canonical intelligence specification:** v1.0 is adopted in `INTELLIGENCE_SPEC.md`; it freezes MVP scope and the target TI formula. Precise component transformations still need operational definitions.
+3. **Canonical seed catalog:** align implementation with the 25 signal definitions/weights, ten pattern memberships, and 15 family mappings in v1.0. Do not use weighted pattern scores that the spec does not define.
+4. **Evidence governance and source pilot:** define provenance, permitted public-source collection, review, deduplication, recency, and retention; build and annotate a small source corpus.
+5. **Analysis baseline and evaluation:** preserve evidence provenance and measure against reviewed examples before calibrating TI, confidence, or ETI.
+6. **Persistence and API:** implement PostgreSQL schema/migrations and an API after data and retention fields are agreed; keep submitted text ephemeral by default.
+7. **Intelligence graph and prediction:** add temporal relationships and emerging-threat candidates only after the corpus, baseline, and evaluation are credible.
+8. **Expand inputs and surfaces:** add OCR, URLs, audio/video, analyst tools, and public intelligence views in dependency order.
 
 ## Account setup needed
 

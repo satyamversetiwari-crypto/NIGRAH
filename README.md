@@ -19,6 +19,7 @@ Open http://localhost:3000.
 ## Project references
 
 - `PROJECT_CONTEXT.md` — consolidated intelligence model and decisions to resolve.
+- `INTELLIGENCE_SPEC.md` — canonical MVP intelligence specification, version 1.0.
 - `BUILD_PLAN.md` — staged implementation and service setup.
 - `ROADMAP.md` — prioritized product, data, and engineering milestones with exit conditions.
 - `source_material/` — supplied project briefs, UI/UX specification, and logo.
