@@ -61,6 +61,8 @@ export default function StoryExperience() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [chainOpen, setChainOpen] = useState(false);
   const chatRef = useRef<HTMLDivElement>(null);
+  const layoutRef = useRef<HTMLDivElement>(null);
+  const [storyVisible, setStoryVisible] = useState(false);
   const characterName = character === "ramesh" ? "Ramesh" : "Sunita";
   const final = step === 6;
   const current = steps[Math.max(0, Math.min(step - 1, steps.length - 1))];
@@ -73,7 +75,7 @@ export default function StoryExperience() {
   const messages = steps.slice(0, Math.min(step, steps.length)).flatMap(item => item.chat.map((message, chatIndex) => ({ ...message, step: item.id, chatIndex })));
   const visibleMessages = final ? messages.filter(item => item.step === 1) : messages.filter(item => !typing || item.step !== step);
   const currentCopy = language === "hi" ? hindiStory[step] : undefined;
-  const standingPortrait = character === "ramesh" ? "/images/story/ramesh-standing.png" : "/images/story/sunita-standing.png";
+  const standingPortrait = character === "ramesh" ? "/images/story/ramesh-standing.webp" : "/images/story/sunita-standing.webp";
   const incomingText = current.chat.find(message => message.from === "them")?.text || "A new message arrived.";
 
   useEffect(() => {
@@ -94,6 +96,18 @@ export default function StoryExperience() {
     query.addEventListener("change", updateMotionPreference);
     return () => query.removeEventListener("change", updateMotionPreference);
   }, []);
+
+  useEffect(() => {
+    const mobile = window.matchMedia("(max-width: 800px)");
+    setAutoPlay(!mobile.matches);
+  }, []);
+
+  useEffect(() => {
+    if (step === 0 || !layoutRef.current) { setStoryVisible(false); return; }
+    const observer = new IntersectionObserver(([entry]) => setStoryVisible(entry.isIntersecting), { threshold: 0.05 });
+    observer.observe(layoutRef.current);
+    return () => observer.disconnect();
+  }, [step]);
 
   function advance(next: number) {
     setDrawerOpen(false);
@@ -124,10 +138,10 @@ export default function StoryExperience() {
   return <section className="story-section" id="story" aria-labelledby="story-title">
     <div className="story-heading"><div className="story-heading-row"><div><p className="eyebrow">A 60-SECOND STORY</p><h2 id="story-title">How scammers think.<br/><span>How NIGRAH helps.</span></h2><p>Same chat, two views. What you see, and what NIGRAH sees.</p><p className="story-intro-note">A clue is a reason to pause and check. It is not proof on its own.</p></div><div className="story-language" role="group" aria-label="Story chat language"><button type="button" aria-pressed={language === "en"} onClick={() => setLanguage("en")}>English</button><button type="button" aria-pressed={language === "hi"} onClick={() => setLanguage("hi")}>हिंदी / Hinglish</button></div></div></div>
     {step === 0 ? <div className="story-intro-card"><div className="story-intro-copy"><span className="story-time">9:40 PM · YOUR PHONE BUZZES</span><h3>You’ve saved ₹40,000.<br/>You’d like it to grow.</h3><p>A message arrives with an investment opportunity. What happens next?</p></div><div className="character-choices" aria-label="Choose who you will follow"><button type="button" onClick={() => { setCharacter("ramesh"); advance(1); }}><Person character="ramesh" mood="relaxed"/><b>Ramesh</b><span>Runs a neighborhood shop</span><i>Follow his story →</i></button><button type="button" onClick={() => { setCharacter("sunita"); advance(1); }}><Person character="sunita" mood="relaxed"/><b>Sunita</b><span>Teaches at a local school</span><i>Follow her story →</i></button></div><button className="just-watch" type="button" onClick={() => advance(1)}>Just watch <span aria-hidden="true">→</span></button></div> : <>
-      <div className="story-layout story-live">
+      <div className="story-layout story-live" ref={layoutRef}>
         <div className="story-phone" aria-label="Fictional chat example">
-          <div className="phone-top"><span className="phone-back">‹</span><span className="phone-avatar" aria-hidden="true">{step === 1 ? "?" : step === 2 ? "V" : "↗"}</span><div><b>{final ? "+91 98xxx xxxxx" : current.header.title}</b><small>{final ? "not in your contacts" : language === "hi" && step === 1 ? "aapke contacts mein nahi" : current.header.sub}</small></div><span className="phone-menu">•••</span></div>
           <div className="story-progress" aria-label={`Story step ${step} of 6`}>{Array.from({ length: 6 }, (_, index) => <span key={index} className={index < step ? "filled" : ""}/>)}</div>
+          <div className="phone-top"><span className="phone-back">‹</span><span className="phone-avatar" aria-hidden="true">{step === 1 ? "?" : step === 2 ? "V" : "↗"}</span><div><b>{final ? "+91 98xxx xxxxx" : current.header.title}</b><small>{final ? "not in your contacts" : language === "hi" && step === 1 ? "aapke contacts mein nahi" : current.header.sub}</small></div><span className="phone-menu">•••</span></div>
           <div className="chat-log" ref={chatRef} aria-live="polite" aria-label="Chat messages">
             {!messages.length && <div className="chat-day">TODAY</div>}
             {visibleMessages.map((item, index) => <ChatBubble key={`${item.step}-${index}`} item={item} index={index}/>)}
@@ -139,6 +153,7 @@ export default function StoryExperience() {
           <div className="character-thought"><small>{characterName} is thinking</small><span>{final ? "I can pause and check before sending money." : currentCopy?.thought || current.thought}</span><i aria-hidden="true"/></div>
           <div className={`character-standing-wrap mood-${mood}`} key={`${character}-${step}`}>
             <Image className="character-standing" src={standingPortrait} width={1024} height={1536} alt={`${characterName}, the story character`} priority={step === 1} />
+            <span className="character-emote" aria-hidden="true">{mood === "relaxed" ? "🙂" : mood === "curious" ? "🤔" : mood === "excited" ? "✨" : mood === "hopeful" ? "💭" : mood === "uneasy" ? "😟" : mood === "shocked" ? "😮" : "🛑"}</span>
             <div className="character-phone-pop" aria-hidden="true">
               <div className="character-phone-top"><i/>{characterName}&apos;s phone</div>
               {typing ? <div className="character-phone-typing"><i/><i/><i/></div> : <><span className="character-phone-label">NEW MESSAGE</span><p>{final ? "The warning sign was here." : language === "hi" ? hindiStory[step]?.chat[0] || incomingText : incomingText}</p></>}
@@ -146,8 +161,8 @@ export default function StoryExperience() {
           </div>
           <div className="character-caption"><b>{characterName}</b><span>{characterName} feels {moodWords[mood]}</span></div>
         </div>
-        <div className="story-insight-column" aria-live="polite">
-          <button className="analysis-mobile-toggle" type="button" aria-expanded={drawerOpen} onClick={() => setDrawerOpen(!drawerOpen)}><span className={`mini-mood mood-${mood}`}><Person character={character} mood={mood}/></span><span><b>{final ? "The signs were there from the first message." : currentCopy?.headline || current.headline}</b><small>{currentCopy?.wants || current.wants}</small></span><i>{drawerOpen ? "Close" : "See analysis"}</i></button>
+        <div className={`story-insight-column ${storyVisible ? "mobile-dock-active" : ""}`} aria-live="polite">
+          <button className="analysis-mobile-toggle" type="button" aria-expanded={drawerOpen} onClick={() => setDrawerOpen(!drawerOpen)}><span><b>See analysis</b><small>{drawerOpen ? "Hide the analysis details" : "What the scammer wants · signs found"}</small></span><i aria-hidden="true">{drawerOpen ? "−" : "+"}</i></button>
           <div className={`story-panel ${drawerOpen ? "drawer-open" : ""} ${typing ? "is-typing" : ""}`}>
             <div className="story-step-label">{final ? "THE REWIND" : `STEP ${step} OF 6`}</div>
             <h3>{final ? "The signs were there from the first message." : currentCopy?.headline || current.headline}</h3>
