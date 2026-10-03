@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { patterns, scamFamilies, signals } from "../lib/intelligence";
+import { useMemo, useState } from "react";
+import { analyzeText, patterns, scamFamilies, signals } from "../lib/intelligence";
+import { scoreAnalysis } from "../lib/scoring";
 
 type Result = { modality: string; transcript?: string; analysis: { summary: string; signals: { id: string; observed_text: string; rationale: string }[]; patterns: { id: string; rationale: string }[]; family_ids: string[]; uncertainty: string[] } };
 
@@ -14,6 +15,18 @@ export default function MultimodalExplorer() {
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
   const accept = modality === "image" ? "image/jpeg,image/png,image/webp" : "audio/webm,audio/wav,audio/mpeg,audio/mp4,audio/ogg";
+
+  const score = useMemo(() => {
+    if (!result) return null;
+    // Score only deterministic phrase matches. For image input, use only the model's quoted text.
+    const scoreText = result.modality === "text"
+      ? text
+      : result.modality === "audio"
+        ? result.transcript || ""
+        : result.analysis.signals.map((item) => item.observed_text).join(" ");
+    const matched = analyzeText(scoreText);
+    return scoreAnalysis(matched.evidence, matched.patterns, null);
+  }, [result, text]);
 
   async function analyze() {
     setMessage(""); setResult(null);
@@ -43,11 +56,33 @@ export default function MultimodalExplorer() {
     <div className="section-heading"><p className="eyebrow">OPTIONAL MODEL ASSISTANCE</p><h2 id="multimodal-title">Explore text, image, or voice signals.</h2><p className="section-lead">This exploratory feature uses an external model only after you opt in. It does not produce a calibrated Threat Index or a fraud verdict.</p></div>
     <div className="multimodal-panel">
       <div className="modality-tabs" role="group" aria-label="Input type">{(["text", "image", "audio"] as const).map((item) => <button key={item} type="button" className={item === modality ? "selected" : ""} onClick={() => { setModality(item); setFile(null); setResult(null); setMessage(""); }}>{item === "audio" ? "Voice" : item[0].toUpperCase() + item.slice(1)}</button>)}</div>
-      {modality === "text" ? <textarea aria-label="Text sample" maxLength={12000} value={text} onChange={(event) => setText(event.target.value)} placeholder="Paste the message or content to explore…" /> : <label className="media-input">{modality === "image" ? "Choose an image" : "Choose an audio recording"}<small>{file ? `${file.name} · ${(file.size / 1024).toFixed(0)} KB` : "Maximum 3 MB. Your file is sent to the configured provider only after consent."}<input type="file" accept={accept} onChange={(event) => setFile(event.target.files?.[0] || null)} /></small></label>}
+      {modality === "text" ? <textarea aria-label="Text sample" maxLength={12000} value={text} onChange={(event) => { setText(event.target.value); setResult(null); }} placeholder="Paste the message or content to explore…" /> : <label className="media-input">{modality === "image" ? "Choose an image" : "Choose an audio recording"}<small>{file ? `${file.name} · ${(file.size / 1024).toFixed(0)} KB` : "Maximum 3 MB. Your file is sent to the configured provider only after consent."}<input type="file" accept={accept} onChange={(event) => { setFile(event.target.files?.[0] || null); setResult(null); }} /></small></label>}
       <label className="cloud-consent"><input type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} /> Send this sample to the configured AI provider for analysis. NIGRAH does not save the submitted content.</label>
       <button className="primary-btn" type="button" disabled={busy} onClick={analyze}>{busy ? "Analyzing…" : "Explore signals →"}</button>
       {message && <p className="model-message" role="status">{message}</p>}
-      {result && <div className="model-result" aria-live="polite"><p>{result.analysis.summary}</p>{result.transcript && <p><b>Transcript:</b> {result.transcript}</p>}<h3>Observed indicators</h3>{result.analysis.signals.length ? <ul>{result.analysis.signals.map((item) => { const signal = signals.find((entry) => entry.id === item.id); return signal ? <li key={item.id}><b>{item.id} · {signal.name}</b><span>{item.observed_text} — {item.rationale}</span></li> : null; })}</ul> : <p>No catalog signals were returned.</p>}{selectedNames(result.analysis.patterns.map((item) => item.id), patterns).length > 0 && <p><b>Related patterns:</b> {selectedNames(result.analysis.patterns.map((item) => item.id), patterns).map((item) => `${item.id} ${item.name}`).join(" · ")}</p>}{selectedNames(result.analysis.family_ids, scamFamilies).length > 0 && <p><b>Related families:</b> {selectedNames(result.analysis.family_ids, scamFamilies).map((item) => `${item.id} ${item.name}`).join(" · ")}</p>}{result.analysis.uncertainty.length > 0 && <p><b>Uncertainty:</b> {result.analysis.uncertainty.join(" · ")}</p>}<p className="model-limit">Exploratory model output. It may be wrong; verify against original sources. No Threat Index or verdict is produced.</p></div>}
+      {result && <div className="model-result" aria-live="polite">
+        <p>{result.analysis.summary}</p>{result.transcript && <p><b>Transcript:</b> {result.transcript}</p>}
+        <h3>Observed indicators</h3>{result.analysis.signals.length ? <ul>{result.analysis.signals.map((item) => { const signal = signals.find((entry) => entry.id === item.id); return signal ? <li key={item.id}><b>{item.id} · {signal.name}</b><span>{item.observed_text} — {item.rationale}</span></li> : null; })}</ul> : <p>No catalog signals were returned.</p>}
+        {selectedNames(result.analysis.patterns.map((item) => item.id), patterns).length > 0 && <p><b>Model-suggested patterns:</b> {selectedNames(result.analysis.patterns.map((item) => item.id), patterns).map((item) => `${item.id} ${item.name}`).join(" · ")}</p>}
+        {selectedNames(result.analysis.family_ids, scamFamilies).length > 0 && <p><b>Model-suggested families:</b> {selectedNames(result.analysis.family_ids, scamFamilies).map((item) => `${item.id} ${item.name}`).join(" · ")}</p>}
+        {result.analysis.uncertainty.length > 0 && <p><b>Uncertainty:</b> {result.analysis.uncertainty.join(" · ")}</p>}
+        {score && <section className="analysis-score" aria-labelledby="analysis-score-title">
+          <div className="analysis-score-heading"><div><h3 id="analysis-score-title">Deterministic score components</h3><p>Calculated from catalog phrase matches, not the model's confidence. Unmatched model observations are shown above and excluded from this score.</p></div><span>SCORING v1.2</span></div>
+          <div className="score-metrics">
+            <div><small>TSS · signal weight</small><b>{score.tss}</b></div>
+            <div><small>TSS normalized</small><b>{score.tssn}</b></div>
+            <div><small>Pattern consistency</small><b>{score.ps}</b></div>
+            <div><small>Signal strength</small><b>{score.ss}{score.tss ? " · phrase-rule match" : ""}</b></div>
+            <div><small>Evidence Quality</small><b>{score.eq ?? "N/A"}</b></div>
+            <div><small>Confidence</small><b>{score.cs ?? "N/A"}</b></div>
+            <div><small>Threat Index</small><b>{score.ti ?? "N/A"}</b></div>
+            <div><small>Risk band</small><b>{score.riskLevel ?? "N/A"}</b></div>
+          </div>
+          {score.families.length > 0 && <div className="analysis-score-families"><h4>Structural family matches</h4>{score.families.map((family) => <div key={family.id}><span><b>{family.name}</b><small>{family.id} · expert-assigned harm prior {family.harmScore}</small></span><b>{family.similarity}%</b></div>)}</div>}
+          <p className="model-limit">Threat Index and confidence stay unavailable until this analysis is linked to reviewed public evidence. Phrase-rule scores are preliminary and are not a fraud verdict.</p>
+        </section>}
+        <p className="model-limit">Model observations are exploratory. Verify them against original sources; they are not validated predictions.</p>
+      </div>}
     </div>
   </section>;
 }
