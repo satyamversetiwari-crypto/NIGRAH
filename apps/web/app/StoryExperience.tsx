@@ -141,7 +141,7 @@ export default function StoryExperience() {
             <Image className="character-standing" src={standingPortrait} width={1024} height={1536} alt={`${characterName}, the story character`} priority={step === 1} />
             <div className="character-phone-pop" aria-hidden="true">
               <div className="character-phone-top"><i/>{characterName}&apos;s phone</div>
-              {typing ? <div className="character-phone-typing"><i/><i/><i/></div> : <><span className="character-phone-label">NEW MESSAGE</span><p>{language === "hi" ? hindiStory[step]?.chat[0] || incomingText : final ? "The warning sign was here." : incomingText}</p></>}
+              {typing ? <div className="character-phone-typing"><i/><i/><i/></div> : <><span className="character-phone-label">NEW MESSAGE</span><p>{final ? "The warning sign was here." : language === "hi" ? hindiStory[step]?.chat[0] || incomingText : incomingText}</p></>}
             </div>
           </div>
           <div className="character-caption"><b>{characterName}</b><span>{characterName} feels {moodWords[mood]}</span></div>
