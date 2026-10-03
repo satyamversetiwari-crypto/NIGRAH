@@ -463,5 +463,14 @@ footer{display:block;padding:38px max(7vw,28px) 20px;color:#899bb1;font-size:11p
 .story-panel.is-typing>*:not(.story-step-label){opacity:0;pointer-events:none}.story-person-card.is-typing{opacity:.68}.analysis-mobile-toggle[aria-expanded="true"]{border-color:#8cafd0}
 .story-heading-row{display:flex;align-items:flex-end;justify-content:space-between;gap:24px}.story-language{display:flex;gap:5px;padding:4px;border:1px solid #d7dcda;border-radius:9px;background:rgba(255,255,255,.68)}.story-language button{min-height:34px;padding:6px 10px;border:0;border-radius:6px;background:transparent;color:#66768a;font-size:10px;font-weight:750;cursor:pointer}.story-language button[aria-pressed="true"]{background:#fff;color:#2e5579;box-shadow:0 1px 4px rgba(20,40,60,.12)}
 @media(max-width:650px){.story-heading-row{display:block}.story-language{width:max-content;margin:11px 0 0}}
+.person-avatar{display:block;object-fit:contain;object-position:center;border-radius:50%;background:#eaf2fa;animation:portrait-arrive .28s ease both;filter:drop-shadow(0 2px 4px rgba(27,52,78,.12))}
+.person-avatar.mood-curious,.person-avatar.mood-hopeful{filter:drop-shadow(0 0 3px rgba(64,133,202,.38))}
+.person-avatar.mood-uneasy,.person-avatar.mood-shocked{filter:drop-shadow(0 0 3px rgba(214,146,71,.46))}
+.character-choices .person-illustration{grid-row:1/4;width:76px;height:76px;align-self:center}
+.story-person-card .person-illustration{width:80px;height:80px;flex:0 0 80px;transform-origin:50% 80%;animation:portrait-arrive .28s ease both}
+.mini-mood .person-illustration{width:44px;height:44px;transform:none}
+@keyframes portrait-arrive{from{opacity:.72;transform:translateY(3px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:800px){.story-person-card .person-illustration{width:65px;height:65px;flex-basis:65px}}
+@media(max-width:650px){.character-choices .person-illustration{grid-row:auto;width:76px;height:76px}.mini-mood .person-illustration{width:44px;height:44px;transform:none}}
 @media(max-width:800px){.topbar nav{display:none}.story-layout.story-live{display:block}.story-phone{height:min(58dvh,620px);min-height:480px}.story-insight-column{max-width:560px;margin:13px auto 0}}
 @media(max-width:650px){.story-phone{height:min(56dvh,530px);min-height:390px}.story-insight-column{max-width:480px}}

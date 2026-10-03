@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import Image from "next/image";
 import { patterns, scamFamilies } from "../lib/intelligence";
 
 type CharacterId = "ramesh" | "sunita";
@@ -45,19 +46,9 @@ const hindiStory: Record<number, { headline: string; thought: string; wants: str
 };
 
 function Person({ character, mood }: { character: CharacterId; mood: Mood }) {
-  const sunita = character === "sunita";
-  return <svg className={`person-illustration ${sunita ? "person-sunita" : "person-ramesh"} mood-${mood}`} viewBox="0 0 180 196" role="img" aria-label={`${sunita ? "Sunita" : "Ramesh"} looks ${moodWords[mood]}`}>
-    <ellipse cx="90" cy="184" rx="67" ry="9" fill="#19344b" opacity=".12"/><path d="M25 184c3-40 27-57 65-57s62 17 65 57" fill={sunita ? "#4f7f84" : "#668c66"}/><path d="M68 129l22 28 22-28" fill="#f3f0e8"/><path d="M83 156h14l8 28H75z" fill={sunita ? "#e2a66f" : "#d58b67"}/>
-    <path d={sunita ? "M46 74c0-39 18-58 45-58 32 0 46 23 44 56l-7 30H52z" : "M44 72c0-38 21-57 47-57 29 0 47 21 46 56l-6 31H49z"} fill={sunita ? "#252b36" : "#332b25"}/>
-    <path d="M53 68c0-27 14-43 37-43 24 0 38 16 38 43v26c0 28-17 44-38 44-22 0-37-17-37-44z" fill={sunita ? "#c98560" : "#b97757"}/>
-    {sunita && <path d="M48 81c-7-41 11-69 43-69s50 24 44 68l-11-25c-17 3-38-8-49-20-7 17-15 25-27 29z" fill="#252b36"/>}
-    {!sunita && <path d="M53 65c4-28 19-42 38-42 17 0 32 9 39 29-13-5-22-14-29-18-11 11-28 17-48 19z" fill="#332b25"/>}
-    <path d="M65 78q9-5 17 0" fill="none" stroke="#633f34" strokeWidth="3" strokeLinecap="round"/><path d="M101 78q9-5 17 0" fill="none" stroke="#633f34" strokeWidth="3" strokeLinecap="round"/>
-    <ellipse cx="74" cy="87" rx="3.5" ry="4" fill="#25252a"/><ellipse cx="109" cy="87" rx="3.5" ry="4" fill="#25252a"/><path d="M89 89l-4 14q5 4 10 0" fill="none" stroke="#965e49" strokeWidth="2" strokeLinecap="round"/>
-    {mood === "relaxed" || mood === "hopeful" || mood === "excited" ? <path d={mood === "excited" ? "M76 113q14 17 28 0" : "M79 111q11 9 22 0"} fill="none" stroke="#713f36" strokeWidth="3" strokeLinecap="round"/> : mood === "shocked" ? <ellipse cx="90" cy="113" rx="7" ry="9" fill="#713f36"/> : <path d={mood === "uneasy" ? "M79 116q11-7 22 0" : "M80 115q10-2 20 0"} fill="none" stroke="#713f36" strokeWidth="3" strokeLinecap="round"/>}
-    {sunita && <path d="M49 74q-14 2-9 22 2 10 12 9M130 74q14 2 10 22-2 10-12 9" fill="none" stroke="#d5a26e" strokeWidth="4"/>}
-    {mood === "uneasy" && <path d="M103 71l14-4" stroke="#633f34" strokeWidth="3" strokeLinecap="round"/>}{mood === "shocked" && <path d="M64 70l13-4m28 0 13 4" stroke="#633f34" strokeWidth="3" strokeLinecap="round"/>}
-  </svg>;
+  const name = character === "sunita" ? "Sunita" : "Ramesh";
+  const src = character === "sunita" ? "/images/story/sunita-profile.png" : "/images/story/ramesh-profile.png";
+  return <Image className={`person-illustration person-avatar person-${character} mood-${mood}`} src={src} width={256} height={256} alt={`${name} profile portrait`} />;
 }
 
 export default function StoryExperience() {
