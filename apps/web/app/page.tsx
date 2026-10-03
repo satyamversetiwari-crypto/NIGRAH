@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { analyzeText, catalogVersion } from "../lib/intelligence";
 import { scoreAnalysis } from "../lib/scoring";
+import MultimodalExplorer from "./MultimodalExplorer";
 
 export default function Home() {
   const [text, setText] = useState("");
@@ -64,6 +65,7 @@ export default function Home() {
     </section>
 
       {score && <div className="score-output" aria-live="polite"><p className="eyebrow">{score.state === "no_intelligence" ? "NO INTELLIGENCE" : "SCORING v1.2 · PRELIMINARY ANALYSIS"}</p><h3>{score.state === "no_intelligence" ? "No Significant Threat Signals Detected" : "Threat Index unavailable"}</h3><p className="result-disclaimer">This browser-only message has no linked public source record. Evidence Quality, Confidence Score, and Threat Index are therefore N/A. This output is preliminary; phrase-rule confidence values are not calibrated.</p><div className="score-metrics"><div><small>TSS · normalized</small><b>{score.tss} · {score.tssn}</b></div><div><small>Pattern Score</small><b>{score.ps}</b></div><div><small>Signal Strength</small><b>{score.ss}</b></div><div><small>Confidence</small><b>{score.cs ?? "N/A"}</b></div><div><small>Threat Index</small><b>{score.ti ?? "N/A"}</b></div><div><small>Primary family similarity</small><b>{score.fss === null ? "N/A" : `${score.fss}%`}</b></div></div>{score.families.length > 0 && <div className="pattern-list"><h4>Top family matches · structural overlap</h4>{score.families.map((family, index) => <div className="pattern-row" key={family.id}><span><b>{index + 1}. {family.name}</b><small>{family.id} · Expert-assigned harm prior {family.harmScore}</small></span><span>{family.similarity}%</span></div>)}</div>}</div>}
-    <footer id="privacy"><div className="footer-brand"><img src="/brand/nigrah-geometric.png" alt="NIGRAH" /><span>Financial threat intelligence research and technology.</span></div><p>This prototype analyzes text in your browser. It is not transmitted or saved.</p></footer>
+    <MultimodalExplorer />
+    <footer id="privacy"><div className="footer-brand"><img src="/brand/nigrah-geometric.png" alt="NIGRAH" /><span>Financial threat intelligence research and technology.</span></div><p>Local text preview stays in your browser. Optional AI analysis sends a sample to the configured provider only after consent and does not save the submitted content.</p></footer>
   </main>;
 }

@@ -83,3 +83,20 @@
 .score-metrics small{font-size:10px;color:#93a3b8;margin-bottom:4px}
 .score-metrics b{font-size:16px}
 @media(max-width:650px){.score-output{width:calc(100% - 36px);margin:-45px auto 70px;padding:15px}.score-metrics{grid-template-columns:repeat(2,1fr)}}
+
+.multimodal-section{max-width:1120px;margin:0 auto 100px;padding:0 32px}
+.multimodal-section .section-heading{max-width:760px;margin-bottom:26px}
+.multimodal-section .section-heading h2{font-size:clamp(30px,3.5vw,42px)}
+.section-lead{max-width:650px;color:var(--muted);font-size:14px}
+.multimodal-panel{padding:24px;background:var(--surface);border:1px solid var(--border);border-radius:14px}
+.modality-tabs{display:flex;gap:8px;margin-bottom:14px}
+.modality-tabs button{padding:8px 14px;border:1px solid var(--border);border-radius:8px;background:var(--surface2);color:var(--muted);cursor:pointer}
+.modality-tabs button.selected{border-color:#3f79bc;color:#fff;background:#173257}
+.multimodal-panel textarea{display:block;width:100%;min-height:145px;resize:vertical;padding:14px;border:1px solid var(--border);border-radius:8px;background:#081321;color:var(--text)}
+.media-input{min-height:110px;display:flex;flex-direction:column;justify-content:center;gap:8px;padding:18px;border:1px dashed #48617f;border-radius:8px;color:var(--text);cursor:pointer}
+.media-input small{color:var(--muted)}.media-input input{display:block;margin-top:12px;max-width:100%}
+.cloud-consent{display:flex;gap:9px;align-items:flex-start;margin:16px 0;color:var(--muted);font-size:12px}
+.cloud-consent input{margin-top:3px;accent-color:var(--blue)}
+.model-message{color:#f2c475;font-size:13px}.model-result{margin-top:20px;padding:18px;border:1px solid var(--border);border-radius:10px;background:#0a1523}
+.model-result h3{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#8eabe0}.model-result li{margin:8px 0}.model-result li span,.model-result li b{display:block}.model-result li span,.model-limit{color:var(--muted);font-size:13px}.model-limit{padding-top:12px;border-top:1px solid var(--border)}
+@media(max-width:650px){.multimodal-section{padding:0 18px;margin-bottom:70px}.multimodal-panel{padding:15px}}
