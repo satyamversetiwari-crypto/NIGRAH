@@ -2,22 +2,23 @@
 
 import MultimodalExplorer from "./MultimodalExplorer";
 import IntelligenceGraph from "./IntelligenceGraph";
+import ModelExplainer from "./ModelExplainer";
 
 export default function Home() {
   return <main>
     <header className="topbar">
       <a className="brand" href="#top" aria-label="NIGRAH home"><img src="/brand/nigrah-geometric.png" alt="NIGRAH" /></a>
-      <nav aria-label="Main navigation"><a href="#platform">Platform</a><a href="#method">Method</a><a href="#analysis">Analysis preview</a></nav>
-      <a className="nav-cta" href="#platform">Explore the model <span aria-hidden="true">↗</span></a>
+      <nav aria-label="Main navigation"><a href="#platform">Intelligence model</a><a href="#how-it-works">How it works</a><a href="#analysis">Explore a sample</a></nav>
+      <a className="nav-cta" href="#how-it-works">See the model in action <span aria-hidden="true">↗</span></a>
     </header>
 
     <section className="hero" id="top">
       <div className="hero-copy">
         <p className="eyebrow"><span className="eyebrow-dot" /> FINANCIAL THREAT INTELLIGENCE</p>
-        <h1>Understand how financial threats <span>take shape.</span></h1>
-        <p className="intro">NIGRAH is an intelligence and predictive technology initiative. It connects public evidence, behavioral patterns, entities, and events to help reveal how financial threats evolve.</p>
-        <div className="hero-actions"><a className="primary-btn" href="#platform">Explore the intelligence model <span aria-hidden="true">→</span></a><a className="secondary-link" href="#analysis">View analysis tools</a></div>
-        <p className="micro-trust"><span aria-hidden="true">⌁</span> Evidence-led research · Provenance by design · Predictive, not prescriptive</p>
+        <h1>Financial threats leave patterns. <span>We connect them.</span></h1>
+        <p className="intro">NIGRAH turns scattered public reports into traceable signals, behaviors, and relationships—helping people understand how financial threats take shape and evolve.</p>
+        <div className="hero-actions"><a className="primary-btn" href="#how-it-works">See how intelligence connects <span aria-hidden="true">→</span></a><a className="secondary-link" href="#platform">Explore the intelligence model</a></div>
+        <p className="micro-trust"><span aria-hidden="true">⌁</span> Traceable sources · Connected behavior · Uncertainty made visible</p>
       </div>
       <div className="intelligence-visual" aria-label="Conceptual NIGRAH intelligence model">
         <div className="visual-topline"><span>INTELLIGENCE MODEL</span><span className="model-status"><i /> IN DEVELOPMENT</span></div>
@@ -29,12 +30,14 @@ export default function Home() {
           <article className="model-node forecast-node"><span className="node-index">03 / INFERENCE</span><b>Emerging threats</b><small>Hypotheses with evidence</small></article>
         </div>
         <div className="visual-foot"><span>Source provenance</span><span>↔</span><span>Explainable relationships</span><span>↔</span><span>Measured uncertainty</span></div>
-        <p className="visual-caption">A conceptual view of the intended system architecture. This is not a live intelligence feed.</p>
+        <p className="visual-caption">A simplified view of the research process. NIGRAH is building toward evidence-linked intelligence, not a live threat feed.</p>
       </div>
     </section>
 
+    <ModelExplainer />
+
     <section className="platform-section" id="platform">
-      <div className="section-heading"><p className="eyebrow">THE TECHNOLOGY</p><h2>From scattered evidence<br /><span>to connected intelligence.</span></h2><p className="section-lead">The goal is to model threat behavior and its evolution—not simply label a message.</p></div>
+      <div className="section-heading"><p className="eyebrow">THE INTELLIGENCE MODEL</p><h2>Build the picture<br /><span>one verified connection at a time.</span></h2><p className="section-lead">A message check is one way to explore the system. The core work is collecting trustworthy evidence, structuring behavior, and studying how patterns change.</p></div>
       <div className="capability-grid">
         <article><span className="capability-number">01</span><h3>Acquire with provenance</h3><p>Collect relevant public evidence with its source, date, geography, and quality intact.</p><small>PUBLIC SOURCES · TRACEABLE RECORDS</small></article>
         <article><span className="capability-number">02</span><h3>Structure behavior</h3><p>Normalize signals and manipulation patterns, then connect them to scam families and related entities.</p><small>SIGNALS · PATTERNS · KNOWLEDGE GRAPH</small></article>

@@ -69,16 +69,16 @@ export default function MultimodalExplorer() {
         {score && <section className="analysis-score" aria-labelledby="analysis-score-title">
           <div className="analysis-score-heading"><div><h3 id="analysis-score-title">Deterministic score components</h3><p>Calculated from catalog phrase matches, not the model's confidence. Unmatched model observations are shown above and excluded from this score.</p></div><span>SCORING v1.2</span></div>
           <div className="score-metrics">
-            <div><small>TSS · signal weight</small><b>{score.tss}</b></div>
-            <div><small>TSS normalized</small><b>{score.tssn}</b></div>
-            <div><small>Pattern consistency</small><b>{score.ps}</b></div>
-            <div><small>Signal strength</small><b>{score.ss}{score.tss ? " · phrase-rule match" : ""}</b></div>
-            <div><small>Evidence Quality</small><b>{score.eq ?? "N/A"}</b></div>
-            <div><small>Confidence</small><b>{score.cs ?? "N/A"}</b></div>
-            <div><small>Threat Index</small><b>{score.ti ?? "N/A"}</b></div>
-            <div><small>Risk band</small><b>{score.riskLevel ?? "N/A"}</b></div>
+            <div><small>Threat Signal Score (TSS)</small><b>{score.tss}</b><span className="score-metric-help">Sum of weights for matched signals.</span></div>
+            <div><small>Normalized Threat Signal Score (TSSN)</small><b>{score.tssn}</b><span className="score-metric-help">TSS rescaled from 0 to 100.</span></div>
+            <div><small>Pattern consistency</small><b>{score.ps}</b><span className="score-metric-help">How strongly detected signals connect to a defined behavior pattern.</span></div>
+            <div><small>Phrase-match strength</small><b>{score.ss}{score.tss ? " · rule-based" : ""}</b><span className="score-metric-help">Strength assigned by deterministic catalog rules.</span></div>
+            <div><small>Evidence Quality (EQ)</small><b>{score.eq ?? "N/A"}</b><span className="score-metric-help">Quality of linked, reviewed public sources.</span></div>
+            <div><small>Confidence Score (CS)</small><b>{score.cs ?? "N/A"}</b><span className="score-metric-help">Requires source quality and stable family matches.</span></div>
+            <div><small>Threat Index (TI)</small><b>{score.ti ?? "N/A"}</b><span className="score-metric-help">Combined index; unavailable when required evidence is missing.</span></div>
+            <div><small>Risk band</small><b>{score.riskLevel ?? "N/A"}</b><span className="score-metric-help">Only shown when a Threat Index can be calculated.</span></div>
           </div>
-          {score.families.length > 0 && <div className="analysis-score-families"><h4>Structural family matches</h4>{score.families.map((family) => <div key={family.id}><span><b>{family.name}</b><small>{family.id} · expert-assigned harm prior {family.harmScore}</small></span><b>{family.similarity}%</b></div>)}</div>}
+          {score.families.length > 0 && <div className="analysis-score-families"><h4>Structural family matches · pattern overlap, not probability</h4>{score.families.map((family) => <div key={family.id}><span><b>{family.name}</b><small>{family.id} · expert-assigned harm prior {family.harmScore}</small></span><b>{family.similarity}%</b></div>)}</div>}
           <p className="model-limit">Threat Index and confidence stay unavailable until this analysis is linked to reviewed public evidence. Phrase-rule scores are preliminary and are not a fraud verdict.</p>
         </section>}
         <p className="model-limit">Model observations are exploratory. Verify them against original sources; they are not validated predictions.</p>
