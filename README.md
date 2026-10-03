@@ -4,13 +4,13 @@ NIGRAH is an intelligence and predictive technology initiative for financial thr
 
 ## Current preview
 
-The web app lives in `apps/web`. It contains a platform-led landing page and a browser-only phrase-matching preview. An optional text/image/voice analysis route is now scaffolded at `/api/analyze`; it requires Hugging Face server environment variables and explicit user consent before sending content to a provider. This prototype has no official source ingestion, persisted intelligence corpus, calibrated Threat Index, or validated predictions. User-submitted content is not saved by the application.
+The web app lives in `apps/web`. It contains a platform-led landing page and a single consent-based text/image/voice analysis tool backed by `/api/analyze`. This prototype has no official source ingestion, persisted intelligence corpus, calibrated Threat Index, or validated predictions. User-submitted content is not saved by the application.
 
 ## Optional multimodal model configuration
 
-Set `HF_TOKEN` and `HF_ANALYSIS_MODEL` in the Vercel project settings for the web app, or in an ignored local `apps/web/.env.local` file. Never add either value to Git or use a `NEXT_PUBLIC_` prefix for the token. Choose a Hugging Face Inference Providers chat-completion model that supports vision input; voice is transcribed with `openai/whisper-large-v3` before analysis. The model/provider must be enabled on the Hugging Face account. See the [Inference Providers chat-completion documentation](https://huggingface.co/docs/inference-providers/tasks/chat-completion) and [speech recognition documentation](https://huggingface.co/docs/inference-providers/en/tasks/automatic-speech-recognition).
+Set `HF_TOKEN` and `HF_ANALYSIS_MODEL` in the Vercel project settings for the web app, or in an ignored local `apps/web/.env.local` file. Never add either value to Git or use a `NEXT_PUBLIC_` prefix for the token. The route sends model names with an explicit provider suffix; `HF_ANALYSIS_PROVIDER` defaults to `featherless-ai` and can be changed to a provider enabled for the selected model. Qwen2.5-VL-7B-Instruct is listed with Featherless AI on Hugging Face. Voice is transcribed with `openai/whisper-large-v3` before analysis. See the [Inference Providers chat-completion documentation](https://huggingface.co/docs/inference-providers/tasks/chat-completion) and [speech recognition documentation](https://huggingface.co/docs/inference-providers/en/tasks/automatic-speech-recognition).
 
-The route validates returned taxonomy IDs and exact text spans, has a small per-instance request limit, and does not persist the input. This limit is a prototype safeguard, not a substitute for provider quotas or a shared production rate limiter. No model credential is currently configured, so the route returns a setup message until credentials are added.
+The route validates returned taxonomy IDs and exact text spans, has a small per-instance request limit, and does not persist the input. This limit is a prototype safeguard, not a substitute for provider quotas or a shared production rate limiter. The provider and model must be enabled on the Hugging Face account.
 
 ## Run locally
 

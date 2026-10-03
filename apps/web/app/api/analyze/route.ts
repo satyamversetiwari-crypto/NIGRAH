@@ -116,7 +116,11 @@ async function classify(text: string, imageUrl: string | undefined, model: strin
 export async function POST(request: NextRequest) {
   if (!allowedRequest(request)) return error("Request limit reached or invalid origin. Try again shortly.", 429);
   const token = process.env.HF_TOKEN;
-  const model = process.env.HF_ANALYSIS_MODEL;
+  const configuredModel = process.env.HF_ANALYSIS_MODEL;
+  const provider = process.env.HF_ANALYSIS_PROVIDER || "featherless-ai";
+  const model = configuredModel
+    ? configuredModel.includes(":") ? configuredModel : `${configuredModel}:${provider}`
+    : undefined;
   if (!token || !model) return error("AI analysis is not configured. Add HF_TOKEN and HF_ANALYSIS_MODEL in the server environment.", 503);
   try {
     const body = await request.json() as { modality?: string; text?: string; file?: string; consent?: boolean };
