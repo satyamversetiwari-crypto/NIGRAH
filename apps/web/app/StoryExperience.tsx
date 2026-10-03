@@ -85,6 +85,18 @@ export default function StoryExperience() {
   const incomingText = current.chat.find(message => message.from === "them")?.text || "A new message arrived.";
 
   useEffect(() => {
+    if (step === 0) return;
+    const preload = [standingPortrait];
+    if (portraitStep < 6) preload.push(`/images/story/expressions/${expressionPortraits[character][portraitStep]}`);
+    preload.forEach(src => {
+      const image = new window.Image();
+      image.decoding = "async";
+      image.src = src;
+      void image.decode().catch(() => undefined);
+    });
+  }, [character, portraitStep, standingPortrait, step]);
+
+  useEffect(() => {
     if (step === 0 || step === 6) { setTyping(false); return; }
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced) { setTyping(false); return; }
@@ -110,7 +122,10 @@ export default function StoryExperience() {
 
   useEffect(() => {
     if (step === 0 || !layoutRef.current) { setStoryVisible(false); return; }
-    const observer = new IntersectionObserver(([entry]) => setStoryVisible(entry.isIntersecting), { threshold: 0.05 });
+    const observer = new IntersectionObserver(([entry]) => {
+      const rect = entry.boundingClientRect;
+      setStoryVisible(entry.isIntersecting && rect.top >= 56 && rect.bottom > 56);
+    }, { threshold: Array.from({ length: 101 }, (_, index) => index / 100) });
     observer.observe(layoutRef.current);
     return () => observer.disconnect();
   }, [step]);
@@ -158,7 +173,7 @@ export default function StoryExperience() {
         <div className={`story-character-stage ${typing ? "character-waiting" : ""}`} aria-live="polite" aria-label={`${characterName} following the story`}>
           <div className="character-thought"><small>{characterName} is thinking</small><span>{final ? "I can pause and check before sending money." : currentCopy?.thought || current.thought}</span><i aria-hidden="true"/></div>
           <div className={`character-standing-wrap mood-${mood}`} key={`${character}-${step}`}>
-            <Image className="character-standing" src={standingPortrait} width={1024} height={1536} sizes="(max-width: 800px) 120px, (max-width: 1120px) 240px, 420px" alt={`${characterName}, story illustration for step ${portraitStep}`} priority={step === 1} />
+            <Image className="character-standing" src={standingPortrait} width={1024} height={1536} sizes="(max-width: 800px) 120px, (max-width: 1120px) 240px, 420px" alt={`${characterName}, story illustration for step ${portraitStep}`} priority={step === 1} unoptimized />
             <span className="character-emote" aria-hidden="true">{mood === "relaxed" ? "🙂" : mood === "curious" ? "🤔" : mood === "excited" ? "✨" : mood === "hopeful" ? "💭" : mood === "uneasy" ? "😟" : mood === "shocked" ? "😮" : "🛑"}</span>
             <div className="character-phone-pop" aria-hidden="true">
               <div className="character-phone-top"><i/>{characterName}&apos;s phone</div>
