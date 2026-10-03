@@ -39,7 +39,7 @@ export default function MultimodalExplorer() {
 
   const selectedNames = (ids: string[], catalog: readonly { id: string; name: string }[]) => ids.map((id) => catalog.find((entry) => entry.id === id)).filter((entry): entry is { id: string; name: string } => Boolean(entry));
 
-  return <section className="multimodal-section" aria-labelledby="multimodal-title">
+  return <section className="multimodal-section" id="analysis" aria-labelledby="multimodal-title">
     <div className="section-heading"><p className="eyebrow">OPTIONAL MODEL ASSISTANCE</p><h2 id="multimodal-title">Explore text, image, or voice signals.</h2><p className="section-lead">This exploratory feature uses an external model only after you opt in. It does not produce a calibrated Threat Index or a fraud verdict.</p></div>
     <div className="multimodal-panel">
       <div className="modality-tabs" role="group" aria-label="Input type">{(["text", "image", "audio"] as const).map((item) => <button key={item} type="button" className={item === modality ? "selected" : ""} onClick={() => { setModality(item); setFile(null); setResult(null); setMessage(""); }}>{item === "audio" ? "Voice" : item[0].toUpperCase() + item.slice(1)}</button>)}</div>
