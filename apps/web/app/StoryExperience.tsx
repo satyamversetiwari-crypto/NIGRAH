@@ -34,6 +34,11 @@ const steps: StoryStep[] = [
   ], headline: "Wait, a fee to withdraw?", thought: "I need to stop and check before sending more.", wants: "One more payment before you can leave.", notices: [{ label: "Fee before withdrawal", id: "TS-16" }], meter: 10 },
 ];
 
+const expressionPortraits: Record<CharacterId, string[]> = {
+  ramesh: ["ramesh-1.webp", "ramesh-2.webp", "ramesh-3.webp", "ramesh-4.webp", "ramesh-5.webp", "ramesh-6.webp"],
+  sunita: ["sunita-1.webp", "sunita-2.webp", "sunita-3.webp", "sunita-4.webp", "sunita-5.webp", "sunita-6.webp"],
+};
+
 const signalNames: Record<string, string> = { "TS-03": "Official title", "TS-06": "Hurry", "TS-07": "Few seats", "TS-09": "Crowd proof", "TS-10": "VIP group", "TS-13": "Free offer", "TS-15": "Personal account", "TS-16": "Fee before withdrawal", "TS-17": "Add money to unlock", "TS-24": "Unofficial app" };
 const moods: Mood[] = ["relaxed", "curious", "excited", "hopeful", "uneasy", "shocked", "alert"];
 const moodWords: Record<Mood, string> = { relaxed: "relaxed", curious: "curious", excited: "excited", hopeful: "hopeful", uneasy: "uneasy", shocked: "shocked", alert: "alert and ready to pause" };
@@ -75,7 +80,8 @@ export default function StoryExperience() {
   const messages = steps.slice(0, Math.min(step, steps.length)).flatMap(item => item.chat.map((message, chatIndex) => ({ ...message, step: item.id, chatIndex })));
   const visibleMessages = final ? messages.filter(item => item.step === 1) : messages.filter(item => !typing || item.step !== step);
   const currentCopy = language === "hi" ? hindiStory[step] : undefined;
-  const standingPortrait = character === "ramesh" ? "/images/story/ramesh-standing.webp" : "/images/story/sunita-standing.webp";
+  const portraitStep = Math.min(Math.max(step, 1), 6);
+  const standingPortrait = `/images/story/expressions/${expressionPortraits[character][portraitStep - 1]}`;
   const incomingText = current.chat.find(message => message.from === "them")?.text || "A new message arrived.";
 
   useEffect(() => {
@@ -152,7 +158,7 @@ export default function StoryExperience() {
         <div className={`story-character-stage ${typing ? "character-waiting" : ""}`} aria-live="polite" aria-label={`${characterName} following the story`}>
           <div className="character-thought"><small>{characterName} is thinking</small><span>{final ? "I can pause and check before sending money." : currentCopy?.thought || current.thought}</span><i aria-hidden="true"/></div>
           <div className={`character-standing-wrap mood-${mood}`} key={`${character}-${step}`}>
-            <Image className="character-standing" src={standingPortrait} width={1024} height={1536} alt={`${characterName}, the story character`} priority={step === 1} />
+            <Image className="character-standing" src={standingPortrait} width={1024} height={1536} sizes="(max-width: 800px) 120px, (max-width: 1120px) 240px, 420px" alt={`${characterName}, story illustration for step ${portraitStep}`} priority={step === 1} />
             <span className="character-emote" aria-hidden="true">{mood === "relaxed" ? "🙂" : mood === "curious" ? "🤔" : mood === "excited" ? "✨" : mood === "hopeful" ? "💭" : mood === "uneasy" ? "😟" : mood === "shocked" ? "😮" : "🛑"}</span>
             <div className="character-phone-pop" aria-hidden="true">
               <div className="character-phone-top"><i/>{characterName}&apos;s phone</div>
