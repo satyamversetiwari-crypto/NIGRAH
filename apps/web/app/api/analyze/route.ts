@@ -116,12 +116,14 @@ async function classify(text: string, imageUrl: string | undefined, model: strin
 export async function POST(request: NextRequest) {
   if (!allowedRequest(request)) return error("Request limit reached or invalid origin. Try again shortly.", 429);
   const token = process.env.HF_TOKEN;
-  const configuredModel = process.env.HF_ANALYSIS_MODEL;
-  const provider = process.env.HF_ANALYSIS_PROVIDER || "featherless-ai";
-  const model = configuredModel
-    ? configuredModel.includes(":") ? configuredModel : `${configuredModel}:${provider}`
-    : undefined;
-  if (!token || !model) return error("AI analysis is not configured. Add HF_TOKEN and HF_ANALYSIS_MODEL in the server environment.", 503);
+  const configuredModel = process.env.HF_ANALYSIS_MODEL || "Qwen/Qwen3.5-35B-A3B";
+  // Migrate the previously configured Featherless model, which is currently returning capacity errors.
+  const modelName = configuredModel === "Qwen/Qwen2.5-VL-7B-Instruct"
+    ? "Qwen/Qwen3.5-35B-A3B"
+    : configuredModel;
+  const provider = process.env.HF_ANALYSIS_PROVIDER || (modelName === "Qwen/Qwen3.5-35B-A3B" ? "novita" : "featherless-ai");
+  const model = modelName.includes(":") ? modelName : `${modelName}:${provider}`;
+  if (!token) return error("AI analysis is not configured. Add HF_TOKEN in the server environment.", 503);
   try {
     const body = await request.json() as { modality?: string; text?: string; file?: string; consent?: boolean };
     if (body.consent !== true) return error("Explicit consent is required before cloud analysis.", 403);
