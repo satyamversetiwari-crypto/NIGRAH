@@ -16,25 +16,25 @@ export default function IntelligenceGraph() {
   const patternYs = signalPositions(linkedPatterns.length, height);
   const familyYs = signalPositions(linkedFamilies.length, height);
 
-  return <section className="graph-section" aria-labelledby="graph-title">
+  return <section className="graph-section" id="graph" aria-labelledby="graph-title">
     <div className="section-heading graph-heading">
-      <p className="eyebrow">CANONICAL RELATIONSHIPS</p>
-      <h2 id="graph-title">Follow a signal through the model.</h2>
-      <p className="section-lead">Explore how an observable signal connects to defined manipulation patterns and threat families.</p>
+      <p className="eyebrow">FOLLOW A RED FLAG</p>
+      <h2 id="graph-title">Pick a warning sign. See where it leads.</h2>
+      <p className="section-lead">Warning signs can point to tricks scammers use; those tricks can appear in different scam types. Choose one clue to explore the catalog links.</p>
     </div>
     <div className="graph-panel">
       <div className="graph-controls">
-        <label htmlFor="graph-signal">Start with a threat signal</label>
+        <label htmlFor="graph-signal">Choose a warning sign</label>
         <select id="graph-signal" value={signalId} onChange={(event) => setSignalId(event.target.value)}>
           {signals.map((item) => <option key={item.id} value={item.id}>{item.id} · {item.name}</option>)}
         </select>
-        <span>{linkedPatterns.length} linked patterns · {linkedFamilies.length} connected families</span>
+        <span>{linkedPatterns.length} related tricks · {linkedFamilies.length} scam types</span>
       </div>
       <div className="graph-scroll" role="img" aria-label={`${signal.id} ${signal.name} links to ${linkedPatterns.length} patterns and ${linkedFamilies.length} threat families`}>
         <svg viewBox={`0 0 980 ${height}`} width="980" height={height} aria-hidden="true">
-          <text x="24" y="24" className="graph-column-label">SIGNAL</text>
-          <text x="365" y="24" className="graph-column-label">MANIPULATION PATTERNS</text>
-          <text x="710" y="24" className="graph-column-label">THREAT FAMILIES</text>
+          <text x="24" y="24" className="graph-column-label">WARNING SIGN</text>
+          <text x="365" y="24" className="graph-column-label">TRICKS</text>
+          <text x="710" y="24" className="graph-column-label">SCAM TYPES</text>
           {linkedPatterns.map((pattern, index) => {
             const py = patternYs[index];
             const patternFamilies = linkedFamilies.filter((family) => family.patterns.some((id) => id === pattern.id));
@@ -63,7 +63,7 @@ export default function IntelligenceGraph() {
           })}
         </svg>
       </div>
-      <p className="graph-note">This view uses the approved catalog mappings. It is not a live threat feed; source-record links will appear when the evidence API is connected.</p>
+      <p className="graph-note">These links come from the reviewed model catalog. They show possible relationships, not live reports or proof about a specific message.</p>
     </div>
   </section>;
 }
