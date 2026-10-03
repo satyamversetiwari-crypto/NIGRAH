@@ -56,6 +56,8 @@ export default function StoryExperience() {
   const [language, setLanguage] = useState<"en" | "hi">("en");
   const [step, setStep] = useState(0);
   const [typing, setTyping] = useState(false);
+  const [autoPlay, setAutoPlay] = useState(true);
+  const [reducedMotion, setReducedMotion] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [chainOpen, setChainOpen] = useState(false);
   const chatRef = useRef<HTMLDivElement>(null);
@@ -71,6 +73,8 @@ export default function StoryExperience() {
   const messages = steps.slice(0, Math.min(step, steps.length)).flatMap(item => item.chat.map((message, chatIndex) => ({ ...message, step: item.id, chatIndex })));
   const visibleMessages = final ? messages.filter(item => item.step === 1) : messages.filter(item => !typing || item.step !== step);
   const currentCopy = language === "hi" ? hindiStory[step] : undefined;
+  const standingPortrait = character === "ramesh" ? "/images/story/ramesh-standing.png" : "/images/story/sunita-standing.png";
+  const incomingText = current.chat.find(message => message.from === "them")?.text || "A new message arrived.";
 
   useEffect(() => {
     if (step === 0 || step === 6) { setTyping(false); return; }
@@ -83,11 +87,25 @@ export default function StoryExperience() {
 
   useEffect(() => { if (chatRef.current) chatRef.current.scrollTop = chatRef.current.scrollHeight; }, [messages.length, typing, step]);
 
+  useEffect(() => {
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updateMotionPreference = () => setReducedMotion(query.matches);
+    updateMotionPreference();
+    query.addEventListener("change", updateMotionPreference);
+    return () => query.removeEventListener("change", updateMotionPreference);
+  }, []);
+
   function advance(next: number) {
     setDrawerOpen(false);
     setChainOpen(false);
     setStep(Math.max(0, Math.min(6, next)));
   }
+
+  useEffect(() => {
+    if (!autoPlay || reducedMotion || typing || step < 1 || step > 5) return;
+    const timer = window.setTimeout(() => advance(step + 1), 9000);
+    return () => window.clearTimeout(timer);
+  }, [autoPlay, reducedMotion, step, typing]);
 
   function ChatBubble({ item, index }: { item: (typeof messages)[number]; index: number }) {
     const flagged = item.flag;
@@ -117,13 +135,50 @@ export default function StoryExperience() {
           </div>
           <div className="phone-compose"><span>Message</span><b>＋</b></div>
         </div>
+        <div className={`story-character-stage ${typing ? "character-waiting" : ""}`} aria-live="polite" aria-label={`${characterName} following the story`}>
+          <div className="character-thought"><small>{characterName} is thinking</small><span>{final ? "I can pause and check before sending money." : currentCopy?.thought || current.thought}</span><i aria-hidden="true"/></div>
+          <div className={`character-standing-wrap mood-${mood}`} key={`${character}-${step}`}>
+            <Image className="character-standing" src={standingPortrait} width={1024} height={1536} alt={`${characterName}, the story character`} priority={step === 1} />
+            <div className="character-phone-pop" aria-hidden="true">
+              <div className="character-phone-top"><i/>{characterName}&apos;s phone</div>
+              {typing ? <div className="character-phone-typing"><i/><i/><i/></div> : <><span className="character-phone-label">NEW MESSAGE</span><p>{language === "hi" ? hindiStory[step]?.chat[0] || incomingText : final ? "The warning sign was here." : incomingText}</p></>}
+            </div>
+          </div>
+          <div className="character-caption"><b>{characterName}</b><span>{characterName} feels {moodWords[mood]}</span></div>
+        </div>
         <div className="story-insight-column" aria-live="polite">
-          <div className={`story-person-card ${typing ? "is-typing" : ""}`}><Person character={character} mood={mood}/><div><b>{characterName} feels {moodWords[mood]}.</b><span>{final ? "Now ready to pause and verify." : currentCopy?.thought || current.thought}</span></div><span className="thought-tail" aria-hidden="true"/></div>
           <button className="analysis-mobile-toggle" type="button" aria-expanded={drawerOpen} onClick={() => setDrawerOpen(!drawerOpen)}><span className={`mini-mood mood-${mood}`}><Person character={character} mood={mood}/></span><span><b>{final ? "The signs were there from the first message." : currentCopy?.headline || current.headline}</b><small>{currentCopy?.wants || current.wants}</small></span><i>{drawerOpen ? "Close" : "See analysis"}</i></button>
           <div className={`story-panel ${drawerOpen ? "drawer-open" : ""} ${typing ? "is-typing" : ""}`}>
             <div className="story-step-label">{final ? "THE REWIND" : `STEP ${step} OF 6`}</div>
             <h3>{final ? "The signs were there from the first message." : currentCopy?.headline || current.headline}</h3>
-            {final ? <><p className="story-wants"><b>What the scammer wants</b>Every step needed you not to stop.</p><div className="story-signals">{allNotices.slice(0, 3).map(item => <span key={item.id}>{item.label}</span>)}</div><button type="button" className="see-chain" onClick={() => setChainOpen(true)}>See the full chain <span aria-hidden="true">→</span></button><p className="story-note"><b>A note</b>NIGRAH reads the sample you share; it does not follow people across private chats. This can happen to anyone.</p><div className="story-ending-actions"><a className="story-check-link" href="#analysis">Check a message you got <span aria-hidden="true">↗</span></a><button type="button" onClick={() => advance(0)}>Replay</button><a className="story-share-link" href={`https://wa.me/?text=${encodeURIComponent("A scam can build one step at a time. Pause, verify, and check the signs. Explore NIGRAH: https://nigrah.vercel.app")}`} target="_blank" rel="noreferrer">Share on WhatsApp ↗</a></div></> : <><p className="story-wants"><b>What the scammer wants</b>{currentCopy?.wants || current.wants}</p><div className="notices-heading"><b>What NIGRAH notices</b><span>{current.meter} signs so far</span></div><div className="story-signals">{(currentCopy?.notices || current.notices.map(item => item.label)).map((label, index) => <span key={index}>{label}</span>)}</div><div className="story-meter" aria-label={`Warning meter ${current.meter} of 10`}><span style={{ width: `${current.meter * 10}%` }}/></div><details className="story-ids"><summary>Show taxonomy IDs</summary><div>{current.notices.map(item => <span key={item.id}>{item.id} · {signalNames[item.id]}</span>)}</div></details><div className="story-controls"><button type="button" onClick={() => advance(step - 1)}>← Back</button><span>{characterName} looks {moodWords[mood]}</span><button type="button" className="story-next" disabled={typing} onClick={() => advance(step + 1)}>{step === 5 ? "Rewind the story →" : "Next →"}</button></div></>}
+            {final ? (
+              <>
+                <p className="story-wants"><b>What the scammer wants</b>Every step needed you not to stop.</p>
+                <div className="story-signals">{allNotices.slice(0, 3).map(item => <span key={item.id}>{item.label}</span>)}</div>
+                <button type="button" className="see-chain" onClick={() => setChainOpen(true)}>See the full chain <span aria-hidden="true">→</span></button>
+                <p className="story-note"><b>A note</b>NIGRAH reads the sample you share; it does not follow people across private chats. This can happen to anyone.</p>
+                <div className="story-ending-actions">
+                  <a className="story-check-link" href="#analysis">Check a message you got <span aria-hidden="true">↗</span></a>
+                  <button type="button" onClick={() => advance(0)}>Replay</button>
+                  <a className="story-share-link" href={`https://wa.me/?text=${encodeURIComponent("A scam can build one step at a time. Pause, verify, and check the signs. Explore NIGRAH: https://nigrah.vercel.app")}`} target="_blank" rel="noreferrer">Share on WhatsApp ↗</a>
+                </div>
+              </>
+            ) : (
+              <>
+                <p className="story-wants"><b>What the scammer wants</b>{currentCopy?.wants || current.wants}</p>
+                <div className="notices-heading"><b>What NIGRAH notices</b><span>{current.meter} signs so far</span></div>
+                <div className="story-signals">{(currentCopy?.notices || current.notices.map(item => item.label)).map((label, index) => <span key={index}>{label}</span>)}</div>
+                <div className="story-meter" aria-label={`Warning meter ${current.meter} of 10`}><span style={{ width: `${current.meter * 10}%` }}/></div>
+                <details className="story-ids"><summary>Show taxonomy IDs</summary><div>{current.notices.map(item => <span key={item.id}>{item.id} · {signalNames[item.id]}</span>)}</div></details>
+                <div className="story-controls">
+                  <button type="button" onClick={() => advance(step - 1)}>← Back</button>
+                  <button type="button" className="story-autoplay" aria-pressed={autoPlay} onClick={() => setAutoPlay(!autoPlay)}>{autoPlay ? "Pause story" : "Auto-play"}</button>
+                  <button type="button" className="story-next" disabled={typing} onClick={() => advance(step + 1)}>{step === 5 ? "Rewind the story →" : "Next →"}</button>
+                </div>
+                <div className={`story-autoplay-track ${autoPlay && !reducedMotion ? "is-running" : ""}`} aria-label={reducedMotion ? "Auto-play paused for reduced motion" : autoPlay ? "Automatically moves to the next story step in nine seconds" : "Auto-play paused"}><span key={`${step}-${autoPlay}-${typing}`} /></div>
+                <p className="story-autoplay-caption" aria-live="polite">{reducedMotion ? "Motion is reduced on your device · use Next to continue" : autoPlay ? "Next step in about 9 seconds · pause anytime" : "Auto-play paused · continue when you’re ready"}</p>
+              </>
+            )}
           </div>
         </div>
       </div>
