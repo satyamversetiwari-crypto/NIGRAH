@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { patterns, scamFamilies, signals } from "../lib/intelligence";
-import HonestNote from "./HonestNote";
 
 const cards = [
   { id: "TS-01", title: "Guaranteed returns", quote: "Guaranteed 30% returns.", meaning: "A promised high return needs careful checking. Investments carry risk." },
@@ -25,6 +24,6 @@ export default function RedFlagGallery() {
     <div className="flag-grid">{cards.map((card, index) => { const item = signals.find(entry => entry.id === card.id); return <article className={`flag-card flag-${index + 1}`} key={card.id}>
       <div className="flag-icon" aria-hidden="true">{["↗", "◷", "◇", "₹", "↓", "✓"][index]}</div><span className="flag-id">{card.id} · WARNING SIGN</span><h3>{card.title}</h3><p className="flag-quote">“{card.quote}”</p><p className="flag-meaning"><b>Why pause:</b> {card.meaning}</p><button type="button" aria-expanded={selected === card.id} onClick={() => setSelected(selected === card.id ? null : card.id)}>{selected === card.id ? "Hide catalog links ↑" : "See where it connects →"}</button>
     </article>; })}</div>
-    {active && signal && <div className="flag-detail" aria-live="polite"><button type="button" className="flag-detail-close" onClick={() => setSelected(null)} aria-label="Close catalog links">×</button><p className="eyebrow">CATALOG CONNECTIONS · {signal.id}</p><h3>{signal.name}: where it connects</h3><div className="connection-chain"><div><b>Warning sign</b><span>{signal.name}</span></div><i aria-hidden="true">→</i><div><b>Related tactics</b><span>{linkedPatterns.length ? linkedPatterns.map(item => item.name).join(" · ") : "No catalog mapping"}</span></div><i aria-hidden="true">→</i><div><b>Related scam types</b><span>{linkedFamilies.length ? linkedFamilies.map(item => item.name).join(" · ") : "No catalog mapping"}</span></div></div><HonestNote>These are links defined in the pilot catalog. They are not a finding about the message you received.</HonestNote></div>}
+    {active && signal && <div className="flag-detail" aria-live="polite"><button type="button" className="flag-detail-close" onClick={() => setSelected(null)} aria-label="Close catalog links">×</button><p className="eyebrow">CATALOG CONNECTIONS · {signal.id}</p><h3>{signal.name}: where it connects</h3><div className="connection-chain"><div><b>Warning sign</b><span>{signal.name}</span></div><i aria-hidden="true">→</i><div><b>Related tactics</b><span>{linkedPatterns.length ? linkedPatterns.map(item => item.name).join(" · ") : "No catalog mapping"}</span></div><i aria-hidden="true">→</i><div><b>Related scam types</b><span>{linkedFamilies.length ? linkedFamilies.map(item => item.name).join(" · ") : "No catalog mapping"}</span></div></div></div>}
   </section>;
 }

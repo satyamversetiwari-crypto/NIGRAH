@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import HonestNote from "./HonestNote";
 import { patterns, scamFamilies } from "../lib/intelligence";
 
 const story = [
@@ -50,7 +49,6 @@ export default function StoryExperience() {
         <p>{final ? "The phrases above are teaching examples. NIGRAH can match a submitted text sample to catalog warning signs and show how signs relate to defined tactics and scam types. It does not follow a person across real chats or verify who sent a message." : "The highlighted phrase is a clue to inspect, not proof by itself."}</p>
         <div className="story-signals" aria-label="Catalog warning signs shown in this step">{(final ? story.flatMap(item => item.signals) : current.signals).filter((id, index, all) => all.indexOf(id) === index).map(id => <span key={id}><b>{id}</b> {signalNames[id] || id}</span>)}</div>
         {final && <div className="story-taxonomy"><b>Catalog links to inspect</b><p><span>Behaviors:</span> {relatedPatterns.map(pattern => pattern.name).join(" · ") || "No linked behavior"}</p><p><span>Scam types:</span> {relatedFamilies.slice(0, 4).map(family => family.name).join(" · ") || "No linked type"}{relatedFamilies.length > 4 ? ` · +${relatedFamilies.length - 4} more` : ""}</p></div>}
-        <HonestNote>This fictional practice story combines catalog examples. It is not a real case, live monitoring, or a finding about any person or firm.</HonestNote>
         <div className="story-controls"><button type="button" onClick={() => setStep(Math.max(0, step - 1))} disabled={step === 0}>← Back</button><span>{final ? "Take the lesson with you" : "Move at your own pace"}</span><button type="button" className="story-next" onClick={() => setStep(step === story.length ? 0 : step + 1)}>{final ? "Replay story" : step === story.length - 1 ? "See the connection →" : "Next →"}</button></div>
         {final && <a className="story-try-link" href="#analysis">Try your own text sample ↑</a>}
       </div>
