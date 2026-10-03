@@ -183,8 +183,8 @@ export default function StoryExperience() {
           <div className="character-caption"><b>{characterName}</b><span>{characterName} feels {moodWords[mood]}</span></div>
         </div>
         <div className={`story-insight-column ${storyVisible ? "mobile-dock-active" : ""}`} aria-live="polite">
-          <button className="analysis-mobile-toggle" type="button" aria-expanded={drawerOpen} onClick={() => setDrawerOpen(!drawerOpen)}><span><b>See analysis</b><small>{drawerOpen ? "Hide the analysis details" : "What the scammer wants · signs found"}</small></span><i aria-hidden="true">{drawerOpen ? "−" : "+"}</i></button>
-          <div className={`story-panel ${drawerOpen ? "drawer-open" : ""} ${typing ? "is-typing" : ""}`}>
+          <button className="analysis-mobile-toggle" type="button" aria-controls="story-analysis-panel" aria-expanded={drawerOpen} onClick={() => setDrawerOpen(!drawerOpen)}><span><b>{drawerOpen ? "Back to the chat" : "See analysis"}</b><small>{drawerOpen ? "Analysis and story controls" : "Explore the signs in this chat"}</small></span><i aria-hidden="true">{drawerOpen ? "⌄" : "＋"}</i></button>
+          <div id="story-analysis-panel" className={`story-panel ${drawerOpen ? "drawer-open" : ""} ${typing ? "is-typing" : ""}`}>
             <div className="story-step-label">{final ? "THE REWIND" : `STEP ${step} OF 6`}</div>
             <h3>{final ? "The signs were there from the first message." : currentCopy?.headline || current.headline}</h3>
             {final ? (
