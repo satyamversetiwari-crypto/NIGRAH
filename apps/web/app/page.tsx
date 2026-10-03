@@ -1,6 +1,7 @@
 "use client";
 
 import MultimodalExplorer from "./MultimodalExplorer";
+import IntelligenceGraph from "./IntelligenceGraph";
 
 export default function Home() {
   return <main>
@@ -42,12 +43,14 @@ export default function Home() {
       <div className="catalog-strip"><div><span className="eyebrow">CURRENT MVP FRAMEWORK</span><p><b>25</b> signals <i /> <b>10</b> behavior patterns <i /> <b>15</b> scam families</p></div><span className="catalog-note">Defined by the approved MVP specification; this is not a live intelligence corpus.</span></div>
     </section>
 
+    <IntelligenceGraph />
+
     <section className="method-section" id="method">
       <div className="section-heading"><p className="eyebrow">HOW WE ARE BUILDING IT</p><h2>Evidence first.<br /><span>Inference with limits.</span></h2></div>
       <div className="method-copy"><p>Reliable prediction starts with a reliable evidence pipeline. Each record needs provenance and review; each analytical layer needs a clear definition; each prediction needs a measurable evaluation method.</p><ol><li><span>01</span><div><b>Source</b><small>Record where evidence came from and when it was observed.</small></div></li><li><span>02</span><div><b>Connect</b><small>Map evidence to signals, patterns, families, and relationships.</small></div></li><li><span>03</span><div><b>Evaluate</b><small>Measure performance against reviewed examples before making predictive claims.</small></div></li></ol></div>
     </section>
 
     <MultimodalExplorer />
-    <footer id="privacy"><div className="footer-brand"><img src="/brand/nigrah-geometric.png" alt="NIGRAH" /><span>Financial threat intelligence research and technology.</span></div><p>Text, image, and voice analysis sends a sample to the configured external model only after consent. NIGRAH does not save submitted content.</p></footer>
+    <footer id="privacy"><div className="footer-brand"><img src="/brand/nigrah-geometric.png" alt="NIGRAH" /><span>Financial threat intelligence research and technology.</span></div><p>Local text preview stays in your browser. Optional AI analysis sends a sample to the configured provider only after consent and does not save the submitted content.</p></footer>
   </main>;
 }
