@@ -66,6 +66,7 @@ export default function StoryExperience() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [chainOpen, setChainOpen] = useState(false);
   const chatRef = useRef<HTMLDivElement>(null);
+  const lastChatScrollTop = useRef(0);
   const layoutRef = useRef<HTMLDivElement>(null);
   const [storyVisible, setStoryVisible] = useState(false);
   const characterName = character === "ramesh" ? "Ramesh" : "Sunita";
@@ -105,7 +106,11 @@ export default function StoryExperience() {
     return () => window.clearTimeout(timer);
   }, [step]);
 
-  useEffect(() => { if (chatRef.current) chatRef.current.scrollTop = chatRef.current.scrollHeight; }, [messages.length, typing, step]);
+  useEffect(() => {
+    const chat = chatRef.current;
+    if (!chat) return;
+    chat.scrollTo({ top: chat.scrollHeight, behavior: reducedMotion ? "auto" : "smooth" });
+  }, [messages.length, typing, step, reducedMotion]);
 
   useEffect(() => {
     const query = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -159,7 +164,11 @@ export default function StoryExperience() {
         <div className="story-phone" aria-label="Fictional chat example">
           <div className="story-progress" aria-label={`Story step ${step} of 6`}>{Array.from({ length: 6 }, (_, index) => <span key={index} className={index < step ? "filled" : ""}/>)}</div>
           <div className="phone-top"><span className="phone-back">‹</span><span className="phone-avatar" aria-hidden="true">{step === 1 ? "?" : step === 2 ? "V" : "↗"}</span><div><b>{final ? "+91 98xxx xxxxx" : current.header.title}</b><small>{final ? "not in your contacts" : language === "hi" && step === 1 ? "aapke contacts mein nahi" : current.header.sub}</small></div><span className="phone-menu">•••</span></div>
-          <div className="chat-log" ref={chatRef} aria-live="polite" aria-label="Chat messages">
+          <div className="chat-log" ref={chatRef} onScroll={event => {
+            const currentTop = event.currentTarget.scrollTop;
+            if (window.matchMedia("(max-width: 800px)").matches && currentTop < lastChatScrollTop.current - 3) setAutoPlay(false);
+            lastChatScrollTop.current = currentTop;
+          }} aria-live="polite" aria-label="Chat messages">
             {!messages.length && <div className="chat-day">TODAY</div>}
             {visibleMessages.map((item, index) => <ChatBubble key={`${item.step}-${index}`} item={item} index={index}/>)}
             {typing && <div className="typing-bubble" aria-label="Contact is typing"><i/><i/><i/></div>}
@@ -178,12 +187,9 @@ export default function StoryExperience() {
           </div>
           <div className="character-caption"><b>{characterName}</b><span>{characterName} feels {moodWords[mood]}</span></div>
         </div>
-        <div className="mobile-story-nav" aria-label="Story navigation">
-          <button type="button" aria-label="Previous story step" onClick={() => advance(step - 1)}>‹</button>
-          <span>Step {step} of 6</span>
-          <button type="button" aria-label={step === 6 ? "Story complete" : "Next story step"} disabled={step === 6 || typing} onClick={() => advance(step + 1)}>›</button>
-        </div>
-        <div className={`story-insight-column ${storyVisible ? "mobile-dock-active" : ""}`} aria-live="polite">
+        <div className="mobile-story-actions" aria-label="Story controls">
+          <button className="mobile-step-arrow" type="button" aria-label="Previous story step" onClick={() => advance(step - 1)}>←</button>
+          <div className={`story-insight-column ${storyVisible ? "mobile-dock-active" : ""}`} aria-live="polite">
           <button className="analysis-mobile-toggle" type="button" aria-controls="story-analysis-panel" aria-expanded={drawerOpen} onClick={() => setDrawerOpen(!drawerOpen)}><span><b>{drawerOpen ? "Back to the chat" : "See analysis"}</b><small>{drawerOpen ? "Analysis and story controls" : "Explore the signs in this chat"}</small></span><i aria-hidden="true">{drawerOpen ? "⌄" : "＋"}</i></button>
           <div id="story-analysis-panel" className={`story-panel ${drawerOpen ? "drawer-open" : ""} ${typing ? "is-typing" : ""}`}>
             <div className="story-step-label">{final ? "THE REWIND" : `STEP ${step} OF 6`}</div>
@@ -217,6 +223,8 @@ export default function StoryExperience() {
               </>
             )}
           </div>
+          </div>
+          <button className="mobile-step-arrow" type="button" aria-label={step === 6 ? "Story complete" : "Next story step"} disabled={step === 6 || typing} onClick={() => advance(step + 1)}>→</button>
         </div>
       </div>
       {chainOpen && final && <div className="story-drawer-backdrop" onClick={() => setChainOpen(false)}><aside className="story-drawer" role="dialog" aria-modal="true" aria-labelledby="story-drawer-title" onClick={event => event.stopPropagation()}><button type="button" className="drawer-close" onClick={() => setChainOpen(false)} aria-label="Close full chain">×</button><p className="eyebrow">THE FULL SIGNAL CHAIN</p><h3 id="story-drawer-title">Ten clues, one changing story.</h3><ol>{allNotices.map((item, index) => <li key={`${item.id}-${index}`}><span>{index + 1}</span><b>{item.label}</b><small>{item.id}</small></li>)}</ol><div className="drawer-taxonomy"><b>Connected behavior patterns</b><p>{relatedPatterns.map(item => item.name).join(" · ")}</p><b>Related scam families</b><p>{relatedFamilies.slice(0, 6).map(item => item.name).join(" · ")}</p></div><p className="story-note">These are catalog relationships shown to explain the model’s structure. A match is a clue to check, not proof by itself.</p></aside></div>}
