@@ -30,7 +30,28 @@ function cloudflareEndpoint(accountId: string, model: string) {
   return `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/${model}`;
 }
 
-function parseModelObject(raw: string) {
+function parseModelObject(raw: unknown): any {
+  if (raw && typeof raw === "object") {
+    if (Array.isArray(raw)) {
+      const textParts = raw.map((item) => {
+        if (typeof item === "string") return item;
+        if (item && typeof item === "object") {
+          const part = item as Record<string, unknown>;
+          return typeof part.text === "string" ? part.text : undefined;
+        }
+        return undefined;
+      }).filter((item): item is string => Boolean(item));
+      if (textParts.length) return parseModelObject(textParts.join("\n"));
+    } else {
+      const value = raw as Record<string, unknown>;
+      if ("summary" in value || "signals" in value || "patterns" in value) return value;
+      for (const key of ["response", "content", "text", "output_text"]) {
+        if (value[key] !== undefined) return parseModelObject(value[key]);
+      }
+    }
+    throw new Error("The model returned an unsupported response format.");
+  }
+  if (typeof raw !== "string") throw new Error("The model returned an unsupported response format.");
   const cleaned = raw.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "");
   try { return JSON.parse(cleaned); } catch { /* Try extracting the JSON object from surrounding model prose. */ }
 
@@ -143,13 +164,13 @@ async function classify(text: string, imageUrl: string | undefined, model: strin
   }
   const payload = await response.json() as {
     choices?: Array<{ message?: { content?: string } }>;
-    result?: { response?: string } | string;
+    result?: { response?: unknown } | string | Record<string, unknown>;
     errors?: Array<{ message?: string }>;
   };
   const raw = accountId
-    ? typeof payload.result === "string" ? payload.result : payload.result?.response
+    ? typeof payload.result === "string" ? payload.result : payload.result?.response ?? payload.result
     : payload.choices?.[0]?.message?.content;
-  if (!raw) throw new Error("The model returned an empty response.");
+  if (raw === undefined || raw === null || raw === "") throw new Error("The model returned an empty response.");
   const analysis = parseModelObject(raw);
   const knownSignals = new Set<string>(signals.map((item) => item.id));
   const knownPatterns = new Set<string>(patterns.map((item) => item.id));
