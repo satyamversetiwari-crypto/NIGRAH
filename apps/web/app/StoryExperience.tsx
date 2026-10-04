@@ -116,16 +116,11 @@ export default function StoryExperience() {
   }, []);
 
   useEffect(() => {
-    const mobile = window.matchMedia("(max-width: 800px)");
-    setAutoPlay(!mobile.matches);
-  }, []);
-
-  useEffect(() => {
     if (step === 0 || !layoutRef.current) { setStoryVisible(false); return; }
     const observer = new IntersectionObserver(([entry]) => {
       const rect = entry.boundingClientRect;
-      setStoryVisible(entry.isIntersecting && rect.top >= 56 && rect.bottom > 56);
-    }, { threshold: Array.from({ length: 101 }, (_, index) => index / 100) });
+      setStoryVisible(entry.isIntersecting && rect.bottom > 0 && rect.top < window.innerHeight);
+    }, { threshold: 0.01 });
     observer.observe(layoutRef.current);
     return () => observer.disconnect();
   }, [step]);
@@ -138,9 +133,10 @@ export default function StoryExperience() {
 
   useEffect(() => {
     if (!autoPlay || reducedMotion || typing || step < 1 || step > 5) return;
+    if (window.matchMedia("(max-width: 800px)").matches && !storyVisible) return;
     const timer = window.setTimeout(() => advance(step + 1), 9000);
     return () => window.clearTimeout(timer);
-  }, [autoPlay, reducedMotion, step, typing]);
+  }, [autoPlay, reducedMotion, step, storyVisible, typing]);
 
   function ChatBubble({ item, index }: { item: (typeof messages)[number]; index: number }) {
     const flagged = item.flag;
@@ -181,6 +177,11 @@ export default function StoryExperience() {
             </div>
           </div>
           <div className="character-caption"><b>{characterName}</b><span>{characterName} feels {moodWords[mood]}</span></div>
+        </div>
+        <div className="mobile-story-nav" aria-label="Story navigation">
+          <button type="button" aria-label="Previous story step" onClick={() => advance(step - 1)}>‹</button>
+          <span>Step {step} of 6</span>
+          <button type="button" aria-label={step === 6 ? "Story complete" : "Next story step"} disabled={step === 6 || typing} onClick={() => advance(step + 1)}>›</button>
         </div>
         <div className={`story-insight-column ${storyVisible ? "mobile-dock-active" : ""}`} aria-live="polite">
           <button className="analysis-mobile-toggle" type="button" aria-controls="story-analysis-panel" aria-expanded={drawerOpen} onClick={() => setDrawerOpen(!drawerOpen)}><span><b>{drawerOpen ? "Back to the chat" : "See analysis"}</b><small>{drawerOpen ? "Analysis and story controls" : "Explore the signs in this chat"}</small></span><i aria-hidden="true">{drawerOpen ? "⌄" : "＋"}</i></button>
