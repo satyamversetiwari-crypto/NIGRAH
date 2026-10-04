@@ -13,7 +13,7 @@ const stages = [
 
 export default function PrivacyPage() {
   return <main className="privacy-page">
-    <header className="topbar"><a className="brand" href="/" aria-label="NIGRAH home"><img src="/brand/nigrah-geometric.png" alt="NIGRAH" /></a><nav aria-label="Main navigation"><a href="/#analysis">Analyze a sample</a><a href="/model">How NIGRAH works</a></nav><a className="nav-cta" href="/">Back to NIGRAH <span aria-hidden="true">↗</span></a></header>
+    <header className="topbar"><a className="brand" href="/" aria-label="NIGRAH home"><img src="/brand/nigrah-geometric.png" alt="NIGRAH" /></a><nav aria-label="Main navigation"><a href="/#analysis">Analyze a sample</a><a href="/model">How NIGRAH works</a></nav><a className="nav-privacy" href="/privacy" aria-current="page">Privacy</a><a className="nav-cta" href="/">Back to NIGRAH <span aria-hidden="true">↗</span></a></header>
 
     <section className="privacy-hero">
       <div className="privacy-hero-copy"><p className="eyebrow"><span className="privacy-live-dot"/> YOUR DATA, CLEARLY EXPLAINED</p><h1>Your message is yours.<br/><span>Your choice comes first.</span></h1><p>See what happens when you ask NIGRAH to analyze a sample, what the pilot stores today, and what would need a separate opt-in.</p><div className="privacy-updated"><span>PRIVACY OVERVIEW</span><i/>Updated 4 October 2026</div></div>

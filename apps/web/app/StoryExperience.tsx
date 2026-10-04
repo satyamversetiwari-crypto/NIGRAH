@@ -206,7 +206,7 @@ export default function StoryExperience() {
           </div>
           <div className="character-caption"><b>{characterName}</b><span>{characterName} feels {moodWords[mood]}</span></div>
         </div>
-        <div className="mobile-story-actions" aria-label="Story controls">
+        <div className={`mobile-story-actions ${storyVisible ? "mobile-dock-active" : ""}`} aria-label="Story controls">
           <button className="mobile-step-arrow" type="button" aria-label="Previous story step" onClick={() => advance(step - 1)}>←</button>
           <div className={`story-insight-column ${storyVisible ? "mobile-dock-active" : ""}`} aria-live="polite">
           <button ref={analysisToggleRef} className="analysis-mobile-toggle" type="button" aria-controls="story-analysis-panel" aria-expanded={drawerOpen} onClick={() => setDrawerOpen(!drawerOpen)}><span><b>{drawerOpen ? "Close analysis" : "See analysis"}</b><small>Step {step} of 6 · Full details</small></span><i aria-hidden="true">{drawerOpen ? "×" : "＋"}</i></button>

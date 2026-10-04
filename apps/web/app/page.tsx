@@ -7,6 +7,7 @@ export default function Home() {
     <header className="topbar">
       <a className="brand" href="#top" aria-label="NIGRAH home"><img src="/brand/nigrah-geometric.png" alt="NIGRAH" /></a>
       <nav aria-label="Main navigation"><a href="#story">See the model in action</a><a href="#red-flags">Warning signs</a><a href="/model">How NIGRAH works</a></nav>
+      <a className="nav-privacy" href="/privacy">Privacy</a>
       <a className="nav-cta" href="#analysis">Explore a sample <span aria-hidden="true">↗</span></a>
     </header>
 

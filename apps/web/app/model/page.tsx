@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function ModelPage() {
   return <main className="model-page">
-    <header className="topbar"><a className="brand" href="/" aria-label="NIGRAH home"><img src="/brand/nigrah-geometric.png" alt="NIGRAH" /></a><nav aria-label="Main navigation"><a href="/#analysis">Analyze a sample</a><a href="/#red-flags">Warning signs</a></nav><a className="nav-cta" href="/">Back to NIGRAH <span aria-hidden="true">↗</span></a></header>
+    <header className="topbar"><a className="brand" href="/" aria-label="NIGRAH home"><img src="/brand/nigrah-geometric.png" alt="NIGRAH" /></a><nav aria-label="Main navigation"><a href="/#analysis">Analyze a sample</a><a href="/#red-flags">Warning signs</a></nav><a className="nav-privacy" href="/privacy">Privacy</a><a className="nav-cta" href="/">Back to NIGRAH <span aria-hidden="true">↗</span></a></header>
     <section className="model-hero"><p className="eyebrow">INSIDE THE INTELLIGENCE SYSTEM</p><h1>From one clue<br/><span>to a connected pattern.</span></h1><p>NIGRAH brings AI-assisted sample analysis together with a structured financial threat taxonomy and evidence-linked intelligence. Each layer adds context to what came before.</p><div className="model-hero-stats"><div><b>{signals.length}</b><span>warning signs</span></div><div><b>{patterns.length}</b><span>behavior patterns</span></div><div><b>{scamFamilies.length}</b><span>threat families</span></div></div></section>
     <section className="model-pipeline" aria-label="NIGRAH analysis pipeline">{[
       ["01", "Interpret", "AI reads text, image, or voice and identifies observable clues."],
