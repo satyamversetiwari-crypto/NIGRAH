@@ -20,10 +20,10 @@ const steps: StoryStep[] = [
     { from: "you", text: "Are these results verified?", time: "9:44 pm" },
   ], headline: "Suddenly, everyone is winning.", thought: "There are so many people here. Maybe I’m missing out.", wants: "You to feel the crowd is winning and time is short.", notices: [{ label: "Crowd proof", id: "TS-09" }, { label: "VIP group", id: "TS-10" }, { label: "Few seats", id: "TS-07" }], meter: 6 },
   { id: 3, mood: "hopeful", header: { title: "Trading app support", sub: "business account" }, chat: [
-    { from: "them", text: "Use our unofficial trading app to see your private portfolio.", time: "9:46 pm", flag: "unofficial trading app" },
+    { from: "them", text: "Use our official trading app—download it here to see your private portfolio.", time: "9:46 pm", flag: "official trading app" },
     { from: "them", attachment: "voice", time: "9:46 pm" },
     { from: "you", text: "Is this the official app?", time: "9:47 pm" },
-  ], headline: "Now they want you on their app.", thought: "A private portfolio could make this easier.", wants: "You inside their app, away from familiar channels.", notices: [{ label: "Unofficial app", id: "TS-24" }], meter: 7 },
+  ], headline: "They call their app official.", thought: "It says official. I should check the link first.", wants: "Move you into an app reached through a link they control.", notices: [{ label: "App link supplied in chat", id: "TS-24" }], meter: 7 },
   { id: 4, mood: "uneasy", header: { title: "Trading app support", sub: "business account" }, chat: [
     { from: "them", text: "Add more to unlock your profits. Transfer the funds to my personal account.", time: "9:51 pm", flag: "personal account" },
     { from: "you", text: "Why to a personal account?", time: "9:52 pm" },
@@ -45,7 +45,7 @@ const moodWords: Record<Mood, string> = { relaxed: "relaxed", curious: "curious"
 const hindiStory: Record<number, { headline: string; thought: string; wants: string; chat: Record<number, string>; notices?: string[] }> = {
   1: { headline: "Ek anjaan shakhs khud ko expert batata hai.", thought: "Expert? Free signal? Hmm, dekhte hain.", wants: "Bina jaanch kiye title par bharosa karwana.", chat: { 0: "Main SEBI-certified analyst hoon. Ek free signal hai. Aaj hi join karein.", 1: "Theek hai, yeh kis baare mein hai?" }, notices: ["Official title", "Free offer", "Jaldi ka pressure"] },
   2: { headline: "Achanak sab log kama rahe hain.", thought: "Group mein bahut log hain. Kahin main mauka na kho doon.", wants: "Dikhana ki sab kama rahe hain aur waqt kam hai.", chat: { 0: "Members kama rahe hain. Sirf 20 seats baaki. VIP group join karein.", 2: "Kya in results ki jaanch hui hai?" }, notices: ["Logon ki kamyabi", "VIP group", "Kam jagah"] },
-  3: { headline: "Ab woh apna app download karne ko kehte hain.", thought: "Private portfolio se shayad sab aasaan ho.", wants: "Aapko unke app par le jaana, jahan usual checks kam hon.", chat: { 0: "Apna unofficial trading app use karein. Aapka private portfolio dikhega.", 2: "Kya yeh official app hai?" }, notices: ["Unofficial app"] },
+  3: { headline: "Woh apne app ko official batate hain.", thought: "Official likha hai. Link pehle verify karna chahiye.", wants: "Aapko apne diye hue link se app par le jaana.", chat: { 0: "Hamara official trading app iss link se download karein—apna private portfolio dekhne ke liye.", 2: "Kya yeh official app hai?" }, notices: ["App link message mein diya gaya"] },
   4: { headline: "Aur paise daalo, tabhi profit unlock hoga.", thought: "Personal account mein payment? Yeh theek nahi lagta.", wants: "Aur paise, woh bhi personal account mein.", chat: { 0: "Profit unlock karne ke liye aur paise jodiye. Funds mere personal account mein bhejiye.", 1: "Personal account mein kyun?" }, notices: ["Paise daal kar unlock", "Personal account"] },
   5: { headline: "Rukiye, paise nikaalne ke liye fee?", thought: "Aur paise bhejne se pehle ruk kar jaanchna hoga.", wants: "Nikalne se pehle ek aur payment lena.", chat: { 0: "Withdrawal se pehle tax release fee deni hogi.", 1: "Paise nikaalne ke liye fee kyun?" }, notices: ["Paise nikaalne se pehle fee"] },
 };
@@ -65,6 +65,9 @@ export default function StoryExperience() {
   const [reducedMotion, setReducedMotion] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [chainOpen, setChainOpen] = useState(false);
+  const analysisToggleRef = useRef<HTMLButtonElement>(null);
+  const analysisCloseRef = useRef<HTMLButtonElement>(null);
+  const analysisWasOpen = useRef(false);
   const chatRef = useRef<HTMLDivElement>(null);
   const lastChatScrollTop = useRef(0);
   const layoutRef = useRef<HTMLDivElement>(null);
@@ -119,6 +122,22 @@ export default function StoryExperience() {
     query.addEventListener("change", updateMotionPreference);
     return () => query.removeEventListener("change", updateMotionPreference);
   }, []);
+
+  useEffect(() => {
+    if (drawerOpen) {
+      analysisWasOpen.current = true;
+      analysisCloseRef.current?.focus();
+      const closeOnEscape = (event: KeyboardEvent) => {
+        if (event.key === "Escape") setDrawerOpen(false);
+      };
+      window.addEventListener("keydown", closeOnEscape);
+      return () => window.removeEventListener("keydown", closeOnEscape);
+    }
+    if (analysisWasOpen.current) {
+      analysisWasOpen.current = false;
+      analysisToggleRef.current?.focus();
+    }
+  }, [drawerOpen]);
 
   useEffect(() => {
     if (step === 0 || !layoutRef.current) { setStoryVisible(false); return; }
@@ -190,8 +209,10 @@ export default function StoryExperience() {
         <div className="mobile-story-actions" aria-label="Story controls">
           <button className="mobile-step-arrow" type="button" aria-label="Previous story step" onClick={() => advance(step - 1)}>←</button>
           <div className={`story-insight-column ${storyVisible ? "mobile-dock-active" : ""}`} aria-live="polite">
-          <button className="analysis-mobile-toggle" type="button" aria-controls="story-analysis-panel" aria-expanded={drawerOpen} onClick={() => setDrawerOpen(!drawerOpen)}><span><b>{drawerOpen ? "Back to the chat" : "See analysis"}</b><small>{drawerOpen ? "Analysis and story controls" : "Explore the signs in this chat"}</small></span><i aria-hidden="true">{drawerOpen ? "⌄" : "＋"}</i></button>
-          <div id="story-analysis-panel" className={`story-panel ${drawerOpen ? "drawer-open" : ""} ${typing ? "is-typing" : ""}`}>
+          <button ref={analysisToggleRef} className="analysis-mobile-toggle" type="button" aria-controls="story-analysis-panel" aria-expanded={drawerOpen} onClick={() => setDrawerOpen(!drawerOpen)}><span><b>{drawerOpen ? "Close analysis" : "See analysis"}</b><small>Step {step} of 6 · Full details</small></span><i aria-hidden="true">{drawerOpen ? "×" : "＋"}</i></button>
+          {drawerOpen && <button className="analysis-sheet-backdrop" type="button" aria-label="Close analysis details" onClick={() => setDrawerOpen(false)}/>}
+          <div id="story-analysis-panel" role={drawerOpen ? "dialog" : undefined} aria-modal={drawerOpen ? true : undefined} aria-label={drawerOpen ? `Analysis for story step ${step}` : undefined} className={`story-panel ${drawerOpen ? "drawer-open" : ""} ${typing ? "is-typing" : ""}`}>
+            <button ref={analysisCloseRef} className="analysis-sheet-close" type="button" aria-label="Close analysis details" onClick={() => setDrawerOpen(false)}>×</button>
             <div className="story-step-label">{final ? "THE REWIND" : `STEP ${step} OF 6`}</div>
             <h3>{final ? "The signs were there from the first message." : currentCopy?.headline || current.headline}</h3>
             {final ? (
